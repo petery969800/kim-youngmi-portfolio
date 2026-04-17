@@ -86,6 +86,7 @@
       display: grid;
       grid-template-columns: 55fr 45fr;
       overflow: hidden;
+      position: relative;
     }
 
     .hero-left {
@@ -200,6 +201,38 @@
       object-fit: cover;
       object-position: center top;
       display: block;
+    }
+
+    .scroll-down {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      opacity: 0;
+      animation: fadeIn 1.8s ease forwards 1.2s;
+    }
+
+    .scroll-down span {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .scroll-down svg {
+      color: var(--gold);
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(6px); }
     }
 
     /* ── SECTION SHARED ── */
@@ -472,7 +505,7 @@
   <!-- HERO -->
   <section id="hero">
     <div class="hero-left">
-      <p class="hero-eyebrow">Professor &amp; Scholar</p>
+      <p class="hero-eyebrow">Professor &amp; Research Scholar</p>
       <h1 class="hero-name">
         Kim <span>Youngmi</span>
       </h1>
@@ -493,6 +526,13 @@
     <div class="hero-right">
       <img class="portrait-photo" src="profile.jpg" alt="Professor Kim Youngmi" />
     </div>
+
+    <a class="scroll-down" href="#research">
+      <span>Scroll</span>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M4 7l6 6 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
   </section>
 
   <!-- RESEARCH AREAS -->
