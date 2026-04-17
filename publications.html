@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Publications — Kim Youngmi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&family=Noto+Sans+KR:wght@300;400&family=Noto+Serif+KR:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #FAF6EE;
+      --navy2:  #EDE5D0;
+      --ivory:  #28190E;
+      --ivory2: #5A4530;
+      --gold:   #875A12;
+      --gold2:  #6A4610;
+      --muted:  #6B5A42;
+      --gutter: clamp(2rem, 7vw, 7rem);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--navy);
+      color: var(--ivory);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    html[lang="ko"] body { font-family: 'Noto Sans KR', sans-serif; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.6rem var(--gutter);
+      background: rgba(250,246,238,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(140,94,20,0.12);
+    }
+
+    .nav-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      color: var(--ivory);
+      text-decoration: none;
+    }
+
+    .nav-right { display: flex; align-items: center; gap: 2.5rem; }
+
+    .nav-links { display: flex; gap: 2.8rem; list-style: none; }
+
+    .nav-links a {
+      font-size: 0.9rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ivory2);
+      text-decoration: none;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .nav-links a.active { color: var(--gold); }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a:hover::after,
+    .nav-links a.active::after { width: 100%; }
+
+    /* ── LANG DROPDOWN ── */
+    .lang-dropdown { position: relative; }
+
+    .lang-selected {
+      display: flex; align-items: center; gap: 0.35rem;
+      background: none;
+      border: 1px solid rgba(140,94,20,0.25);
+      border-radius: 3px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem; letter-spacing: 0.15em;
+      color: var(--ivory2);
+      cursor: pointer;
+      padding: 0.3rem 0.65rem;
+      transition: border-color 0.3s, color 0.3s;
+      min-height: 32px; white-space: nowrap;
+    }
+
+    .lang-selected:hover { border-color: var(--gold); color: var(--gold); }
+    .lang-selected svg { transition: transform 0.25s; }
+    .lang-dropdown.open .lang-selected svg { transform: rotate(180deg); }
+
+    .lang-menu {
+      position: absolute; top: calc(100% + 0.5rem); left: 0;
+      background: #FAF6EE;
+      border: 1px solid rgba(140,94,20,0.25);
+      border-radius: 3px;
+      box-shadow: 0 4px 16px rgba(40,25,14,0.10);
+      overflow: hidden; min-width: 100%;
+      opacity: 0; pointer-events: none;
+      transform: translateY(-6px);
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 200;
+    }
+
+    .lang-dropdown.open .lang-menu { opacity: 1; pointer-events: all; transform: translateY(0); }
+
+    .lang-option {
+      display: block; width: 100%;
+      padding: 0.6rem 0.85rem;
+      background: none; border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem; letter-spacing: 0.12em;
+      color: var(--muted); cursor: pointer;
+      text-align: left;
+      transition: color 0.2s, background 0.2s;
+      white-space: nowrap;
+    }
+
+    .lang-option:hover { background: rgba(140,94,20,0.06); color: var(--ivory); }
+    .lang-option.active { color: var(--gold); }
+
+    /* ── HAMBURGER ── */
+    .nav-toggle {
+      display: none; flex-direction: column;
+      justify-content: center; gap: 5px;
+      background: none; border: none; cursor: pointer;
+      padding: 8px; z-index: 200;
+      min-width: 44px; min-height: 44px; align-items: center;
+    }
+
+    .nav-toggle span {
+      display: block; width: 22px; height: 1.5px;
+      background: var(--ivory);
+      transition: transform 0.35s ease, opacity 0.35s ease;
+      transform-origin: center;
+    }
+
+    .nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .nav-overlay {
+      position: fixed; inset: 0;
+      background: #28190E;
+      z-index: 150;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 2.5rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .nav-overlay.open { opacity: 1; pointer-events: all; }
+
+    .nav-overlay a {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem; font-weight: 300;
+      color: #F4EDD8; text-decoration: none;
+      letter-spacing: 0.06em; transition: color 0.3s;
+    }
+
+    .nav-overlay a:hover { color: #C4840A; }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      padding: 10rem var(--gutter) 4rem;
+      border-bottom: 1px solid rgba(140,94,20,0.12);
+    }
+
+    .page-header-label {
+      font-size: 0.8rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .page-header-label::before {
+      content: '';
+      display: block;
+      width: 2rem; height: 1px;
+      background: var(--gold);
+    }
+
+    .page-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 4vw, 3.6rem);
+      font-weight: 300;
+      color: var(--ivory);
+      line-height: 1.1;
+    }
+
+    html[lang="ko"] .page-header h1 { font-family: 'Noto Serif KR', serif; }
+
+    /* ── PUBLICATIONS LIST ── */
+    .pub-section {
+      padding: 0 var(--gutter) 6rem;
+    }
+
+    .year-group {
+      padding-top: 4rem;
+    }
+
+    .year-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 300;
+      color: var(--gold);
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(140,94,20,0.15);
+      margin-bottom: 0;
+    }
+
+    /* ── PUB ITEM ── */
+    .pub-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: start;
+      gap: 2rem;
+      padding: 1.75rem 0;
+      border-bottom: 1px solid rgba(140,94,20,0.08);
+      transition: background 0.2s;
+    }
+
+    .pub-item:hover { background: rgba(140,94,20,0.03); }
+
+    .pub-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: var(--ivory);
+      line-height: 1.4;
+      margin-bottom: 0.4rem;
+    }
+
+    html[lang="ko"] .pub-title { font-family: 'Noto Serif KR', serif; }
+
+    .pub-meta {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .pub-meta em {
+      font-style: italic;
+      color: var(--ivory2);
+    }
+
+    /* ── ACTIONS ── */
+    .pub-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: flex-end;
+      padding-top: 0.2rem;
+      flex-shrink: 0;
+    }
+
+    .pub-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.4rem 0.9rem;
+      border-radius: 2px;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+      min-height: 34px;
+    }
+
+    .pub-btn-view {
+      color: var(--gold);
+      border: 1px solid rgba(135,90,18,0.35);
+      background: transparent;
+    }
+
+    .pub-btn-view:hover {
+      background: var(--gold);
+      color: var(--navy);
+      border-color: var(--gold);
+    }
+
+    .pub-btn-pdf {
+      color: var(--muted);
+      border: 1px solid rgba(107,90,66,0.25);
+      background: transparent;
+    }
+
+    .pub-btn-pdf:hover {
+      color: var(--ivory);
+      border-color: var(--ivory2);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 3rem var(--gutter);
+      border-top: 1px solid rgba(140,94,20,0.12);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      color: var(--ivory2);
+    }
+
+    .footer-copy { font-size: 0.9rem; color: var(--muted); letter-spacing: 0.08em; }
+
+    /* ── TABLET ── */
+    @media (max-width: 1024px) {
+      .page-header { padding: 9rem var(--gutter) 3rem; }
+      footer { padding: 2.5rem var(--gutter); }
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      :root { --gutter: 1.25rem; }
+      nav { padding: 1.1rem var(--gutter); }
+      .nav-links { display: none; }
+      .nav-toggle { display: flex; }
+
+      .page-header { padding: 7rem var(--gutter) 2.5rem; }
+      .page-header h1 { font-size: clamp(2rem, 8vw, 2.6rem); }
+
+      .pub-section { padding: 0 var(--gutter) 4rem; }
+      .year-group { padding-top: 2.5rem; }
+
+      .pub-item {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .pub-actions {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+
+      footer {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+        padding: 2rem var(--gutter);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-brand" href="index.html" data-i18n="nav.brand">KIM YOUNGMI</a>
+    <div class="nav-right">
+      <div class="lang-dropdown" id="langDropdown">
+        <button class="lang-selected" id="langToggleBtn">
+          <span id="currentLang">EN</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </button>
+        <div class="lang-menu">
+          <button class="lang-option active" data-lang="en">EN — English</button>
+          <button class="lang-option" data-lang="ko">KR — 한국어</button>
+        </div>
+      </div>
+      <ul class="nav-links">
+        <li><a href="publications.html" class="active" data-i18n="nav.publications">Publications</a></li>
+        <li><a href="blog.html" data-i18n="nav.blog">Blog</a></li>
+        <li><a href="#" data-i18n="nav.about">About</a></li>
+      </ul>
+    </div>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="nav-overlay">
+    <a href="publications.html" data-i18n="nav.publications" onclick="closeNav()">Publications</a>
+    <a href="blog.html" data-i18n="nav.blog" onclick="closeNav()">Blog</a>
+    <a href="#" data-i18n="nav.about" onclick="closeNav()">About</a>
+  </div>
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+    <p class="page-header-label" data-i18n="pub.label">Journal Publications</p>
+    <h1 data-i18n="pub.title">Publications</h1>
+  </header>
+
+  <!-- PUBLICATIONS -->
+  <main class="pub-section">
+
+    <div class="year-group">
+      <h2 class="year-heading">2024</h2>
+
+      <div class="pub-item">
+        <div>
+          <p class="pub-title">Institutional Trust and Bureaucratic Legitimacy in Post-Reform Korea</p>
+          <p class="pub-meta"><em>Korean Journal of Public Administration</em>, Vol. 62, No. 1, pp. 1–34</p>
+        </div>
+        <div class="pub-actions">
+          <a class="pub-btn pub-btn-view" href="#" target="_blank" rel="noopener">
+            View
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 10L10 1M10 1H4M10 1v6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </a>
+          <a class="pub-btn pub-btn-pdf" href="#" download>
+            PDF
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v7M2 8.5l3.5 2 3.5-2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="pub-item">
+        <div>
+          <p class="pub-title">Citizen Participation in Digital Public Services: Evidence from Municipal e-Government Platforms</p>
+          <p class="pub-meta"><em>Government Information Quarterly</em>, Vol. 41, No. 2</p>
+        </div>
+        <div class="pub-actions">
+          <a class="pub-btn pub-btn-view" href="#" target="_blank" rel="noopener">
+            View
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 10L10 1M10 1H4M10 1v6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </a>
+          <a class="pub-btn pub-btn-pdf" href="#" download>
+            PDF
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v7M2 8.5l3.5 2 3.5-2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="year-group">
+      <h2 class="year-heading">2023</h2>
+
+      <div class="pub-item">
+        <div>
+          <p class="pub-title">Bureaucratic Autonomy and Policy Discretion in Korean Local Government</p>
+          <p class="pub-meta"><em>Public Administration Review</em>, Vol. 83, No. 4, pp. 812–829</p>
+        </div>
+        <div class="pub-actions">
+          <a class="pub-btn pub-btn-view" href="#" target="_blank" rel="noopener">
+            View
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 10L10 1M10 1H4M10 1v6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </a>
+          <a class="pub-btn pub-btn-pdf" href="#" download>
+            PDF
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v7M2 8.5l3.5 2 3.5-2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="pub-item">
+        <div>
+          <p class="pub-title">Welfare State Retrenchment and Administrative Capacity: A Comparative Study of East Asian Democracies</p>
+          <p class="pub-meta"><em>Journal of Asian Public Policy</em>, Vol. 16, No. 2, pp. 198–221</p>
+        </div>
+        <div class="pub-actions">
+          <a class="pub-btn pub-btn-view" href="#" target="_blank" rel="noopener">
+            View
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 10L10 1M10 1H4M10 1v6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </a>
+          <a class="pub-btn pub-btn-pdf" href="#" download>
+            PDF
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v7M2 8.5l3.5 2 3.5-2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="year-group">
+      <h2 class="year-heading">2022</h2>
+
+      <div class="pub-item">
+        <div>
+          <p class="pub-title">Digital Transformation of Public Services: Evidence from Local Government</p>
+          <p class="pub-meta"><em>Government Information Quarterly</em>, Vol. 39, No. 3</p>
+        </div>
+        <div class="pub-actions">
+          <a class="pub-btn pub-btn-view" href="#" target="_blank" rel="noopener">
+            View
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 10L10 1M10 1H4M10 1v6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </a>
+          <a class="pub-btn pub-btn-pdf" href="#" download>
+            PDF
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v7M2 8.5l3.5 2 3.5-2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="pub-item">
+        <div>
+          <p class="pub-title">Accountability Mechanisms and Public Trust: A Longitudinal Analysis of Korean Administrative Reform</p>
+          <p class="pub-meta"><em>Korean Journal of Public Administration</em>, Vol. 60, No. 3, pp. 67–102</p>
+        </div>
+        <div class="pub-actions">
+          <a class="pub-btn pub-btn-view" href="#" target="_blank" rel="noopener">
+            View
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 10L10 1M10 1H4M10 1v6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </a>
+          <a class="pub-btn pub-btn-pdf" href="#" download>
+            PDF
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v7M2 8.5l3.5 2 3.5-2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="year-group">
+      <h2 class="year-heading">2021</h2>
+
+      <div class="pub-item">
+        <div>
+          <p class="pub-title">Deliberative Governance and Policy Legitimacy: Lessons from Korea's Participatory Budgeting Experiment</p>
+          <p class="pub-meta"><em>Policy Sciences</em>, Vol. 54, No. 1, pp. 45–72</p>
+        </div>
+        <div class="pub-actions">
+          <a class="pub-btn pub-btn-view" href="#" target="_blank" rel="noopener">
+            View
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 10L10 1M10 1H4M10 1v6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </a>
+          <a class="pub-btn pub-btn-pdf" href="#" download>
+            PDF
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v7M2 8.5l3.5 2 3.5-2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-name" data-i18n="footer.name">Kim Youngmi</span>
+    <span class="footer-copy" data-i18n="footer.copy">Department of Public Administration &nbsp;·&nbsp; Sangmyung University &nbsp;·&nbsp; Seoul, Korea</span>
+  </footer>
+
+  <script>
+    const t = {
+      en: {
+        'nav.brand': 'KIM YOUNGMI', 'nav.publications': 'Publications', 'nav.blog': 'Blog', 'nav.about': 'About',
+        'pub.label': 'Journal Publications',
+        'pub.title': 'Publications',
+        'footer.name': 'Kim Youngmi',
+        'footer.copy': 'Department of Public Administration\u00a0·\u00a0Sangmyung University\u00a0·\u00a0Seoul, Korea',
+      },
+      ko: {
+        'nav.brand': '김영미', 'nav.publications': '연구논문', 'nav.blog': '블로그', 'nav.about': '소개',
+        'pub.label': '학술논문',
+        'pub.title': '연구 업적',
+        'footer.name': '김영미',
+        'footer.copy': '행정학과\u00a0·\u00a0상명대학교\u00a0·\u00a0서울, 대한민국',
+      }
+    };
+
+    function setLang(lang) {
+      document.documentElement.lang = lang;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (t[lang][key] !== undefined) el.textContent = t[lang][key];
+      });
+      const el = document.getElementById('currentLang');
+      if (el) el.textContent = lang.toUpperCase();
+      document.querySelectorAll('.lang-option').forEach(opt => {
+        opt.classList.toggle('active', opt.dataset.lang === lang);
+      });
+      localStorage.setItem('lang', lang);
+    }
+
+    const langDropdown = document.getElementById('langDropdown');
+    document.getElementById('langToggleBtn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      langDropdown.classList.toggle('open');
+    });
+    document.querySelectorAll('.lang-option').forEach(opt => {
+      opt.addEventListener('click', () => { setLang(opt.dataset.lang); langDropdown.classList.remove('open'); });
+    });
+    document.addEventListener('click', () => langDropdown.classList.remove('open'));
+
+    const saved = localStorage.getItem('lang');
+    if (saved && saved !== 'en') setLang(saved);
+
+    const toggle = document.querySelector('.nav-toggle');
+    const overlay = document.querySelector('.nav-overlay');
+    toggle.addEventListener('click', () => {
+      const isOpen = overlay.classList.toggle('open');
+      toggle.classList.toggle('open', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+    function closeNav() {
+      overlay.classList.remove('open');
+      toggle.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  </script>
+</body>
+</html>
