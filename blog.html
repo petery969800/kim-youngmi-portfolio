@@ -400,14 +400,43 @@
       letter-spacing: 0.08em;
     }
 
-    /* ── MOBILE ── */
+    /* ── TABLET (≤ 1024px) ── */
+    @media (max-width: 1024px) {
+      .blog-header { padding: 9rem var(--gutter) 3rem; }
+      .feed { padding: 2.5rem var(--gutter) 5rem; gap: 1.75rem; }
+      footer { padding: 2.5rem var(--gutter); }
+    }
+
+    /* ── MOBILE (≤ 768px) ── */
     @media (max-width: 768px) {
-      :root { --gutter: 1.5rem; }
-      nav { padding: 1.2rem var(--gutter); }
+      :root { --gutter: 1.25rem; }
+
+      nav { padding: 1.1rem var(--gutter); }
       .nav-links { display: none; }
       .nav-toggle { display: flex; }
-      .post-inner { padding: 1.5rem 1.25rem; }
-      footer { flex-direction: column; gap: 0.75rem; text-align: center; }
+
+      .blog-header {
+        padding: 7rem var(--gutter) 2.5rem;
+      }
+      .blog-header h1 { font-size: clamp(2rem, 8vw, 2.6rem); }
+      .blog-header p { font-size: 0.9375rem; }
+
+      .feed {
+        padding: 1.75rem var(--gutter) 4rem;
+        gap: 1.25rem;
+      }
+
+      .post h2 { font-size: 1.3rem; }
+      .post-inner { padding: 1.25rem 1rem; }
+
+      .post-image figcaption { padding: 0.5rem 1rem; }
+
+      footer {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+        padding: 2rem var(--gutter);
+      }
     }
   </style>
 </head>
@@ -448,7 +477,6 @@
   <header class="blog-header">
     <p class="blog-header-label" data-i18n="blog.label">Writing</p>
     <h1 data-i18n="blog.title">Thoughts & Reflections</h1>
-    <p data-i18n="blog.desc">On governance, policy, and public life — written as it comes to mind.</p>
   </header>
 
   <!-- FEED -->
