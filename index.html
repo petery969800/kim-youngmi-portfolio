@@ -284,10 +284,42 @@
 
     .research-card {
       background: rgba(13,27,42,0.6);
-      padding: 3rem 2.5rem;
+      padding: 0;
       border-top: 1px solid rgba(196,151,42,0.15);
       transition: background 0.4s;
       cursor: default;
+      overflow: hidden;
+    }
+
+    .research-img {
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .research-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(13,27,42,0.2) 0%, rgba(13,27,42,0.55) 100%);
+    }
+
+    .research-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(30%) brightness(0.75);
+      transition: transform 0.7s ease;
+    }
+
+    .research-card:hover .research-img img {
+      transform: scale(1.06);
+    }
+
+    .research-body {
+      padding: 2rem 2.5rem 2.5rem;
     }
 
     .research-card:hover {
@@ -533,19 +565,34 @@
     </div>
     <div class="research-grid">
       <div class="research-card reveal">
-        <div class="research-num">01</div>
-        <h3 class="research-area-title">Public Governance &amp; Institutional Reform</h3>
-        <p class="research-desc">Placeholder — administrative restructuring, bureaucratic accountability, and state capacity in Korea and comparative East Asian contexts.</p>
+        <div class="research-img">
+          <img src="https://picsum.photos/seed/governance/700/400" alt="Public Governance" />
+        </div>
+        <div class="research-body">
+          <div class="research-num">01</div>
+          <h3 class="research-area-title">Public Governance &amp; Institutional Reform</h3>
+          <p class="research-desc">Placeholder — administrative restructuring, bureaucratic accountability, and state capacity in Korea and comparative East Asian contexts.</p>
+        </div>
       </div>
       <div class="research-card reveal">
-        <div class="research-num">02</div>
-        <h3 class="research-area-title">Policy Process &amp; Implementation</h3>
-        <p class="research-desc">Placeholder — policy design, agenda-setting, and the gap between legislative intent and on-the-ground outcomes in social and welfare policy.</p>
+        <div class="research-img">
+          <img src="https://picsum.photos/seed/policy/700/400" alt="Policy Process" />
+        </div>
+        <div class="research-body">
+          <div class="research-num">02</div>
+          <h3 class="research-area-title">Policy Process &amp; Implementation</h3>
+          <p class="research-desc">Placeholder — policy design, agenda-setting, and the gap between legislative intent and on-the-ground outcomes in social and welfare policy.</p>
+        </div>
       </div>
       <div class="research-card reveal">
-        <div class="research-num">03</div>
-        <h3 class="research-area-title">Civic Participation &amp; Democratic Governance</h3>
-        <p class="research-desc">Placeholder — deliberative democracy, participatory budgeting, and civil society's role in shaping public administration.</p>
+        <div class="research-img">
+          <img src="https://picsum.photos/seed/civic/700/400" alt="Civic Participation" />
+        </div>
+        <div class="research-body">
+          <div class="research-num">03</div>
+          <h3 class="research-area-title">Civic Participation &amp; Democratic Governance</h3>
+          <p class="research-desc">Placeholder — deliberative democracy, participatory budgeting, and civil society's role in shaping public administration.</p>
+        </div>
       </div>
     </div>
   </section>
