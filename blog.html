@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog — Kim Youngmi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&family=Noto+Sans+KR:wght@300;400&family=Noto+Serif+KR:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #FAF6EE;
+      --navy2:  #EDE5D0;
+      --ivory:  #28190E;
+      --ivory2: #5A4530;
+      --gold:   #875A12;
+      --gold2:  #6A4610;
+      --muted:  #6B5A42;
+      --gutter: clamp(2rem, 7vw, 7rem);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--navy);
+      color: var(--ivory);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    html[lang="ko"] body { font-family: 'Noto Sans KR', sans-serif; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.6rem var(--gutter);
+      background: rgba(250,246,238,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(140,94,20,0.12);
+    }
+
+    .nav-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      color: var(--ivory);
+      text-decoration: none;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.8rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.9rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ivory2);
+      text-decoration: none;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .nav-links a.active { color: var(--gold); }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a:hover::after,
+    .nav-links a.active::after { width: 100%; }
+
+    /* ── LANG DROPDOWN ── */
+    .lang-dropdown { position: relative; }
+
+    .lang-selected {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: none;
+      border: 1px solid rgba(140,94,20,0.25);
+      border-radius: 3px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      color: var(--ivory2);
+      cursor: pointer;
+      padding: 0.3rem 0.65rem;
+      transition: border-color 0.3s, color 0.3s;
+      min-height: 32px;
+      white-space: nowrap;
+    }
+
+    .lang-selected:hover { border-color: var(--gold); color: var(--gold); }
+    .lang-selected svg { transition: transform 0.25s; }
+    .lang-dropdown.open .lang-selected svg { transform: rotate(180deg); }
+
+    .lang-menu {
+      position: absolute;
+      top: calc(100% + 0.5rem);
+      left: 0;
+      background: #FAF6EE;
+      border: 1px solid rgba(140,94,20,0.25);
+      border-radius: 3px;
+      box-shadow: 0 4px 16px rgba(40,25,14,0.10);
+      overflow: hidden;
+      min-width: 100%;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-6px);
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 200;
+    }
+
+    .lang-dropdown.open .lang-menu { opacity: 1; pointer-events: all; transform: translateY(0); }
+
+    .lang-option {
+      display: block;
+      width: 100%;
+      padding: 0.6rem 0.85rem;
+      background: none;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      cursor: pointer;
+      text-align: left;
+      transition: color 0.2s, background 0.2s;
+      white-space: nowrap;
+    }
+
+    .lang-option:hover { background: rgba(140,94,20,0.06); color: var(--ivory); }
+    .lang-option.active { color: var(--gold); }
+
+    /* ── HAMBURGER ── */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      z-index: 200;
+      min-width: 44px;
+      min-height: 44px;
+      align-items: center;
+    }
+
+    .nav-toggle span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: var(--ivory);
+      transition: transform 0.35s ease, opacity 0.35s ease;
+      transform-origin: center;
+    }
+
+    .nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .nav-overlay {
+      position: fixed;
+      inset: 0;
+      background: #28190E;
+      z-index: 150;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .nav-overlay.open { opacity: 1; pointer-events: all; }
+
+    .nav-overlay a {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem;
+      font-weight: 300;
+      color: #F4EDD8;
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: color 0.3s;
+    }
+
+    .nav-overlay a:hover { color: #C4840A; }
+
+    /* ── BLOG HEADER ── */
+    .blog-header {
+      padding: 10rem var(--gutter) 4rem;
+      max-width: calc(720px + 2 * var(--gutter));
+      margin: 0 auto;
+      border-bottom: 1px solid rgba(140,94,20,0.12);
+    }
+
+    .blog-header-label {
+      font-size: 0.8rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .blog-header-label::before {
+      content: '';
+      display: block;
+      width: 2rem;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .blog-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 4vw, 3.6rem);
+      font-weight: 300;
+      color: var(--ivory);
+      line-height: 1.1;
+      margin-bottom: 0.75rem;
+    }
+
+    .blog-header p {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 48ch;
+    }
+
+    /* ── FEED ── */
+    .feed {
+      max-width: calc(720px + 2 * var(--gutter));
+      margin: 0 auto;
+      padding: 3rem var(--gutter) 6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* ── POST CARD ── */
+    .post {
+      background: #FFFFFF;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(40,25,14,0.07), 0 4px 20px rgba(40,25,14,0.05);
+      overflow: hidden;
+      transition: box-shadow 0.3s;
+    }
+
+    .post:hover {
+      box-shadow: 0 2px 8px rgba(40,25,14,0.10), 0 8px 32px rgba(40,25,14,0.08);
+    }
+
+    .post-inner {
+      padding: 2rem 2.25rem;
+    }
+
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .post-date {
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+
+    .post-lang-tag {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--navy);
+      background: var(--gold);
+      padding: 0.1rem 0.5rem;
+      border-radius: 2px;
+      opacity: 0.8;
+    }
+
+    .post h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.55rem;
+      font-weight: 400;
+      color: var(--ivory);
+      line-height: 1.3;
+      margin-bottom: 1rem;
+    }
+
+    html[lang="ko"] .post h2 { font-family: 'Noto Serif KR', serif; }
+
+    .post-body {
+      font-size: 1rem;
+      color: var(--ivory2);
+      line-height: 1.8;
+    }
+
+    .post-body p + p { margin-top: 1rem; }
+
+    .post-body a {
+      color: var(--gold);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* ── POST IMAGE ── */
+    .post-image {
+      width: 100%;
+      display: block;
+      margin-top: 1.5rem;
+    }
+
+    .post-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .post-image figcaption {
+      font-size: 0.8rem;
+      color: var(--muted);
+      padding: 0.6rem 2.25rem;
+      font-style: italic;
+      background: var(--navy2);
+    }
+
+    /* ── POST VIDEO ── */
+    .post-video {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      margin-top: 1.5rem;
+      background: #1a1a1a;
+    }
+
+    .post-video iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: none;
+    }
+
+    /* ── DIVIDER IN POST ── */
+    .post-divider {
+      width: 2rem;
+      height: 1px;
+      background: rgba(140,94,20,0.25);
+      margin: 1.25rem 0;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 3rem var(--gutter);
+      border-top: 1px solid rgba(140,94,20,0.12);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      color: var(--ivory2);
+    }
+
+    .footer-copy {
+      font-size: 0.9rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      :root { --gutter: 1.5rem; }
+      nav { padding: 1.2rem var(--gutter); }
+      .nav-links { display: none; }
+      .nav-toggle { display: flex; }
+      .post-inner { padding: 1.5rem 1.25rem; }
+      footer { flex-direction: column; gap: 0.75rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-brand" href="index.html" data-i18n="nav.brand">KIM YOUNGMI</a>
+    <div class="nav-right">
+      <div class="lang-dropdown" id="langDropdown">
+        <button class="lang-selected" id="langToggleBtn">
+          <span id="currentLang">EN</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </button>
+        <div class="lang-menu">
+          <button class="lang-option active" data-lang="en">EN — English</button>
+          <button class="lang-option" data-lang="ko">KR — 한국어</button>
+        </div>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html#works" data-i18n="nav.publications">Publications</a></li>
+        <li><a href="blog.html" class="active" data-i18n="nav.blog">Blog</a></li>
+        <li><a href="#" data-i18n="nav.about">About</a></li>
+      </ul>
+    </div>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="nav-overlay">
+    <a href="index.html#works" data-i18n="nav.publications" onclick="closeNav()">Publications</a>
+    <a href="blog.html" data-i18n="nav.blog" onclick="closeNav()">Blog</a>
+    <a href="#" data-i18n="nav.about" onclick="closeNav()">About</a>
+  </div>
+
+  <!-- BLOG HEADER -->
+  <header class="blog-header">
+    <p class="blog-header-label" data-i18n="blog.label">Writing</p>
+    <h1 data-i18n="blog.title">Thoughts & Reflections</h1>
+    <p data-i18n="blog.desc">On governance, policy, and public life — written as it comes to mind.</p>
+  </header>
+
+  <!-- FEED -->
+  <main class="feed">
+
+    <!-- POST: text + image -->
+    <article class="post">
+      <div class="post-inner">
+        <div class="post-meta">
+          <time class="post-date">April 15, 2026</time>
+        </div>
+        <h2>What Seoul's Digital Government Success Really Tells Us</h2>
+        <div class="post-body">
+          <p>Korea is often held up as a model of digital government — ranked first by the UN three years running. But I think we sometimes mistake the outcome for the lesson.</p>
+          <p>The infrastructure matters, yes. But what actually drove the transformation was something harder to export: a public that demanded it, a bureaucracy willing to be measured, and a political will to treat digital access as a right rather than a convenience. Technology was the vehicle, not the destination.</p>
+          <p>When other countries ask "how did Korea do it?", I want to answer: slowly, imperfectly, and with a lot of public pressure. That's the real story.</p>
+        </div>
+      </div>
+      <figure class="post-image">
+        <img src="https://picsum.photos/seed/digital-gov/800/420" alt="Digital government" />
+        <figcaption>Digital infrastructure alone doesn't build trust — accountability does.</figcaption>
+      </figure>
+    </article>
+
+    <!-- POST: text only -->
+    <article class="post">
+      <div class="post-inner">
+        <div class="post-meta">
+          <time class="post-date">April 8, 2026</time>
+        </div>
+        <h2>The Gap Between Policy and People</h2>
+        <div class="post-body">
+          <p>I've been thinking lately about the distance between a policy document and the person it's meant to serve. That gap — between legislative intent and lived experience — is where most of public administration actually happens. It's also where it most often fails.</p>
+          <p>A law can be well-designed and still land badly. Implementation is not a technicality. It's the whole point. And yet it remains the least glamorous part of the work — which is precisely why it gets neglected.</p>
+          <div class="post-divider"></div>
+          <p>This is what I keep trying to tell my students: the exciting part isn't writing the policy. It's making it real for the person at the counter who doesn't speak the right language, fill out the right form, or know the right office to walk into.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- POST: text + YouTube -->
+    <article class="post">
+      <div class="post-inner">
+        <div class="post-meta">
+          <time class="post-date">March 30, 2026</time>
+        </div>
+        <h2>A Talk Worth Watching</h2>
+        <div class="post-body">
+          <p>Sharing this lecture on participatory democracy that I came across recently. The framing around citizen assemblies and their limitations resonates with much of what I've been writing about deliberative governance.</p>
+          <p>Worth an hour of your time — especially the section starting around 22 minutes on why representation and participation are not the same thing.</p>
+        </div>
+      </div>
+      <div class="post-video">
+        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Lecture placeholder" allowfullscreen></iframe>
+      </div>
+      <div class="post-inner" style="padding-top: 1rem; padding-bottom: 1.25rem;">
+        <p style="font-size: 0.8rem; color: var(--muted); font-style: italic;">Replace the YouTube link above with the actual video URL.</p>
+      </div>
+    </article>
+
+    <!-- POST: short text, no title (Facebook-style) -->
+    <article class="post">
+      <div class="post-inner">
+        <div class="post-meta">
+          <time class="post-date">March 20, 2026</time>
+        </div>
+        <div class="post-body">
+          <p>Finished teaching the spring semester's first seminar on institutional reform today. The students asked better questions than I had answers for — which is exactly how it should be. Grateful for a room full of people who still believe government can work better.</p>
+        </div>
+      </div>
+    </article>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-name" data-i18n="footer.name">Kim Youngmi</span>
+    <span class="footer-copy" data-i18n="footer.copy">Department of Public Administration &nbsp;·&nbsp; Sangmyung University &nbsp;·&nbsp; Seoul, Korea</span>
+  </footer>
+
+  <script>
+    const t = {
+      en: {
+        'nav.brand': 'KIM YOUNGMI', 'nav.publications': 'Publications', 'nav.blog': 'Blog', 'nav.about': 'About',
+        'blog.label': 'Writing',
+        'blog.title': 'Thoughts & Reflections',
+        'blog.desc': 'On governance, policy, and public life — written as it comes to mind.',
+        'footer.name': 'Kim Youngmi',
+        'footer.copy': 'Department of Public Administration\u00a0·\u00a0Sangmyung University\u00a0·\u00a0Seoul, Korea',
+      },
+      ko: {
+        'nav.brand': '김영미', 'nav.publications': '연구논문', 'nav.blog': '블로그', 'nav.about': '소개',
+        'blog.label': '글쓰기',
+        'blog.title': '생각과 단상',
+        'blog.desc': '거버넌스, 정책, 그리고 공공의 삶에 대해 — 생각이 흐르는 대로.',
+        'footer.name': '김영미',
+        'footer.copy': '행정학과\u00a0·\u00a0상명대학교\u00a0·\u00a0서울, 대한민국',
+      }
+    };
+
+    function setLang(lang) {
+      document.documentElement.lang = lang;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (t[lang][key] !== undefined) el.textContent = t[lang][key];
+      });
+      const currentLangEl = document.getElementById('currentLang');
+      if (currentLangEl) currentLangEl.textContent = lang.toUpperCase();
+      document.querySelectorAll('.lang-option').forEach(opt => {
+        opt.classList.toggle('active', opt.dataset.lang === lang);
+      });
+      localStorage.setItem('lang', lang);
+    }
+
+    const langDropdown = document.getElementById('langDropdown');
+    const langToggleBtn = document.getElementById('langToggleBtn');
+
+    langToggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      langDropdown.classList.toggle('open');
+    });
+
+    document.querySelectorAll('.lang-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        setLang(opt.dataset.lang);
+        langDropdown.classList.remove('open');
+      });
+    });
+
+    document.addEventListener('click', () => langDropdown.classList.remove('open'));
+
+    const saved = localStorage.getItem('lang');
+    if (saved && saved !== 'en') setLang(saved);
+
+    // Hamburger
+    const toggle = document.querySelector('.nav-toggle');
+    const overlay = document.querySelector('.nav-overlay');
+    toggle.addEventListener('click', () => {
+      const isOpen = overlay.classList.toggle('open');
+      toggle.classList.toggle('open', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+    function closeNav() {
+      overlay.classList.remove('open');
+      toggle.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  </script>
+</body>
+</html>

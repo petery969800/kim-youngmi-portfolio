@@ -11,13 +11,13 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --navy:   #0D1B2A;
-      --navy2:  #132234;
-      --ivory:  #F5F0E8;
-      --ivory2: #DDD8CF;
-      --gold:   #C4972A;
-      --gold2:  #A67B1E;
-      --muted:  #8A9BAD;
+      --navy:   #FAF6EE;
+      --navy2:  #EDE5D0;
+      --ivory:  #28190E;
+      --ivory2: #5A4530;
+      --gold:   #875A12;
+      --gold2:  #6A4610;
+      --muted:  #6B5A42;
       --gutter: clamp(2rem, 7vw, 7rem);
     }
 
@@ -41,7 +41,9 @@
       justify-content: space-between;
       align-items: center;
       padding: 1.6rem var(--gutter);
-      background: linear-gradient(to bottom, rgba(13,27,42,0.95) 0%, transparent 100%);
+      background: rgba(250,246,238,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(140,94,20,0.12);
     }
 
     .nav-brand {
@@ -80,6 +82,12 @@
 
     .nav-links a:hover { color: var(--gold); }
     .nav-links a:hover::after { width: 100%; }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+    }
 
     /* ── HERO ── */
     #hero {
@@ -121,9 +129,10 @@
 
     .hero-name {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(3.5rem, 5.25vw, 5.5rem);
+      font-size: clamp(2.4rem, 3.6vw, 4.2rem);
       font-weight: 300;
       line-height: 1.08;
+      white-space: nowrap;
       color: var(--ivory);
       margin-bottom: 0;
     }
@@ -156,17 +165,45 @@
       margin-bottom: 1.5rem;
     }
 
-    .hero-quote {
+    /* ── PHILOSOPHY BAND ── */
+    #philosophy {
+      background: var(--navy);
+      padding: 7rem var(--gutter);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .philosophy-rule {
+      width: 2rem;
+      height: 1px;
+      background: var(--gold);
+      margin-bottom: 3rem;
+    }
+
+    .philosophy-quote {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1.15rem;
+      font-size: clamp(1.55rem, 2.6vw, 2.4rem);
       font-style: italic;
       font-weight: 300;
-      color: rgba(245,240,232,0.5);
-      border-left: 1px solid var(--gold);
-      padding-left: 1.25rem;
-      max-width: 40ch;
-      line-height: 1.65;
-      margin-bottom: 2rem;
+      color: var(--ivory);
+      line-height: 1.6;
+      max-width: 78ch;
+      letter-spacing: 0.01em;
+    }
+
+    .philosophy-attr {
+      margin-top: 2.5rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.7;
+    }
+
+    html[lang="ko"] .philosophy-quote {
+      font-family: 'Noto Serif KR', serif;
     }
 
     .hero-social {
@@ -223,7 +260,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom, rgba(13,27,42,0.3) 0%, transparent 15%, transparent 85%, rgba(13,27,42,0.3) 100%);
+      background: linear-gradient(to bottom, rgba(250,246,238,0.3) 0%, transparent 15%, transparent 85%, rgba(250,246,238,0.3) 100%);
       z-index: 2;
       pointer-events: none;
     }
@@ -232,7 +269,7 @@
       width: min(700px, 100%);
       height: 56%;
       object-fit: cover;
-      object-position: center top;
+      object-position: 78% top;
       display: block;
       -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
       mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
@@ -292,13 +329,13 @@
     .section-rule {
       flex: 1;
       height: 1px;
-      background: rgba(196,151,42,0.2);
+      background: rgba(196,132,10,0.2);
     }
 
     .section-count {
       font-family: 'Cormorant Garamond', serif;
       font-size: 1.125rem;
-      color: rgba(138,155,173,0.5);
+      color: rgba(122,106,82,0.5);
     }
 
     .section-title {
@@ -311,7 +348,7 @@
 
     /* ── RESEARCH ── */
     #research {
-      background: var(--navy2);
+      background: var(--navy);
     }
 
     .research-grid {
@@ -321,9 +358,9 @@
     }
 
     .research-card {
-      background: rgba(13,27,42,0.6);
+      background: #FFFFFF;
       padding: 0;
-      border-top: 1px solid rgba(196,151,42,0.15);
+      border-top: 1px solid rgba(196,132,10,0.15);
       transition: background 0.4s;
       cursor: default;
       overflow: hidden;
@@ -340,7 +377,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom, rgba(13,27,42,0.2) 0%, rgba(13,27,42,0.55) 100%);
+      background: linear-gradient(to bottom, rgba(30,15,5,0.15) 0%, rgba(30,15,5,0.55) 100%);
     }
 
     .research-img img {
@@ -348,7 +385,7 @@
       height: 100%;
       object-fit: cover;
       display: block;
-      filter: grayscale(30%) brightness(0.75);
+      filter: grayscale(15%) brightness(0.9);
       transition: transform 0.7s ease;
     }
 
@@ -361,7 +398,7 @@
     }
 
     .research-card:hover {
-      background: rgba(196,151,42,0.04);
+      background: rgba(196,132,10,0.04);
     }
 
     .research-card:hover .research-num {
@@ -372,7 +409,7 @@
       font-family: 'Cormorant Garamond', serif;
       font-size: 2.4rem;
       font-weight: 300;
-      color: rgba(138,155,173,0.25);
+      color: rgba(122,106,82,0.25);
       transition: color 0.4s;
       line-height: 1;
       margin-bottom: 1.5rem;
@@ -409,17 +446,17 @@
       align-items: start;
       gap: 2.5rem;
       padding: 2.5rem 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(140,94,20,0.12);
       transition: border-color 0.3s;
       cursor: default;
     }
 
     .work-item:first-child {
-      border-top: 1px solid rgba(255,255,255,0.05);
+      border-top: 1px solid rgba(140,94,20,0.12);
     }
 
     .work-item:hover {
-      border-color: rgba(196,151,42,0.2);
+      border-color: rgba(196,132,10,0.2);
     }
 
     .work-year {
@@ -490,7 +527,7 @@
       align-items: center;
       gap: 0.8rem;
       padding: 0.85rem 2rem;
-      border: 1px solid rgba(196,151,42,0.35);
+      border: 1px solid rgba(196,132,10,0.35);
       font-size: 0.875rem;
       letter-spacing: 0.22em;
       text-transform: uppercase;
@@ -549,16 +586,16 @@
       align-items: baseline;
       gap: 1.25rem;
       padding: 1rem 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(140,94,20,0.12);
       transition: border-color 0.3s;
     }
 
     .course-item:first-child {
-      border-top: 1px solid rgba(255,255,255,0.05);
+      border-top: 1px solid rgba(140,94,20,0.12);
     }
 
     .course-item:hover {
-      border-color: rgba(196,151,42,0.2);
+      border-color: rgba(196,132,10,0.2);
     }
 
     .course-code {
@@ -578,7 +615,7 @@
 
     .mentorship-block {
       padding-top: 4rem;
-      border-top: 1px solid rgba(196,151,42,0.15);
+      border-top: 1px solid rgba(196,132,10,0.15);
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 4rem;
@@ -680,8 +717,8 @@
 
     .form-group input,
     .form-group textarea {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(140,94,20,0.06);
+      border: 1px solid rgba(140,94,20,0.18);
       border-radius: 2px;
       padding: 1rem 1.25rem;
       font-family: 'Inter', sans-serif;
@@ -700,7 +737,7 @@
 
     .form-group input:focus,
     .form-group textarea:focus {
-      border-color: rgba(196,151,42,0.5);
+      border-color: rgba(196,132,10,0.5);
     }
 
     .form-group textarea {
@@ -715,7 +752,7 @@
       align-self: flex-start;
       padding: 1rem 2.5rem;
       background: transparent;
-      border: 1px solid rgba(196,151,42,0.5);
+      border: 1px solid rgba(196,132,10,0.5);
       font-family: 'Inter', sans-serif;
       font-size: 0.8125rem;
       letter-spacing: 0.2em;
@@ -734,7 +771,7 @@
     /* ── FOOTER ── */
     footer {
       padding: 3rem var(--gutter);
-      border-top: 1px solid rgba(255,255,255,0.05);
+      border-top: 1px solid rgba(140,94,20,0.12);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -753,35 +790,82 @@
     }
 
     /* ── LANGUAGE TOGGLE ── */
-    .lang-toggle {
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      margin-left: 2rem;
+    .lang-dropdown {
+      position: relative;
     }
 
-    .lang-btn {
+    .lang-selected {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: none;
+      border: 1px solid rgba(140,94,20,0.25);
+      border-radius: 3px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      color: var(--ivory2);
+      cursor: pointer;
+      padding: 0.3rem 0.65rem;
+      transition: border-color 0.3s, color 0.3s;
+      min-height: 32px;
+      white-space: nowrap;
+    }
+
+    .lang-selected:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .lang-selected svg {
+      transition: transform 0.25s;
+    }
+
+    .lang-dropdown.open .lang-selected svg {
+      transform: rotate(180deg);
+    }
+
+    .lang-menu {
+      position: absolute;
+      top: calc(100% + 0.5rem);
+      left: 0;
+      background: #FAF6EE;
+      border: 1px solid rgba(140,94,20,0.25);
+      box-shadow: 0 4px 16px rgba(40,25,14,0.10);
+      border-radius: 3px;
+      overflow: hidden;
+      min-width: 100%;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-6px);
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 200;
+    }
+
+    .lang-dropdown.open .lang-menu {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0);
+    }
+
+    .lang-option {
+      display: block;
+      width: 100%;
+      padding: 0.6rem 0.85rem;
       background: none;
       border: none;
       font-family: 'Inter', sans-serif;
       font-size: 0.75rem;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.12em;
       color: var(--muted);
       cursor: pointer;
-      padding: 0.25rem 0.35rem;
-      transition: color 0.3s;
-      min-height: 44px;
-      min-width: 36px;
+      text-align: left;
+      transition: color 0.2s, background 0.2s;
+      white-space: nowrap;
     }
 
-    .lang-btn.active { color: var(--ivory); }
-    .lang-btn:hover { color: var(--gold); }
-
-    .lang-divider {
-      color: rgba(255,255,255,0.15);
-      font-size: 0.7rem;
-      user-select: none;
-    }
+    .lang-option:hover { background: rgba(140,94,20,0.06); color: var(--ivory); }
+    .lang-option.active { color: var(--gold); }
 
     /* Korean font overrides */
     html[lang="ko"] body {
@@ -857,7 +941,7 @@
     .nav-overlay {
       position: fixed;
       inset: 0;
-      background: var(--navy);
+      background: #28190E;
       z-index: 150;
       display: flex;
       flex-direction: column;
@@ -878,13 +962,13 @@
       font-family: 'Cormorant Garamond', serif;
       font-size: 2.8rem;
       font-weight: 300;
-      color: var(--ivory2);
+      color: #F4EDD8;
       text-decoration: none;
       letter-spacing: 0.06em;
       transition: color 0.3s;
     }
 
-    .nav-overlay a:hover { color: var(--gold); }
+    .nav-overlay a:hover { color: #C4840A; }
 
     /* ── TABLET (≤ 1024px) ── */
     @media (max-width: 1024px) {
@@ -924,7 +1008,7 @@
         padding: 6rem var(--gutter) 2rem;
       }
 
-      .hero-name { font-size: clamp(2.8rem, 11vw, 3.8rem); }
+      .hero-name { font-size: clamp(2.4rem, 9vw, 3.4rem); white-space: normal; }
       .hero-bio { max-width: 100%; font-size: 1rem; }
 
       .hero-right {
@@ -950,6 +1034,7 @@
       .work-link { display: none; }
 
       section { padding: 4rem var(--gutter); }
+      #philosophy { padding: 5rem var(--gutter); }
 
       footer {
         flex-direction: column;
@@ -972,15 +1057,22 @@
   <!-- NAV -->
   <nav>
     <a class="nav-brand" href="#" data-i18n="nav.brand">KIM YOUNGMI</a>
-    <ul class="nav-links">
-      <li><a href="#" data-i18n="nav.publications">Publications</a></li>
-      <li><a href="#" data-i18n="nav.blog">Blog</a></li>
-      <li><a href="#" data-i18n="nav.about">About</a></li>
-    </ul>
-    <div class="lang-toggle">
-      <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
-      <span class="lang-divider">|</span>
-      <button class="lang-btn" data-lang="ko" onclick="setLang('ko')">KR</button>
+    <div class="nav-right">
+      <div class="lang-dropdown" id="langDropdown">
+        <button class="lang-selected" id="langToggleBtn">
+          <span id="currentLang">EN</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </button>
+        <div class="lang-menu">
+          <button class="lang-option active" data-lang="en">EN — English</button>
+          <button class="lang-option" data-lang="ko">KR — 한국어</button>
+        </div>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#" data-i18n="nav.publications">Publications</a></li>
+        <li><a href="blog.html" data-i18n="nav.blog">Blog</a></li>
+        <li><a href="#" data-i18n="nav.about">About</a></li>
+      </ul>
     </div>
     <button class="nav-toggle" aria-label="Toggle navigation">
       <span></span><span></span><span></span>
@@ -989,25 +1081,21 @@
 
   <div class="nav-overlay">
     <a href="#" data-i18n="nav.publications" onclick="closeNav()">Publications</a>
-    <a href="#" data-i18n="nav.blog" onclick="closeNav()">Blog</a>
+    <a href="blog.html" data-i18n="nav.blog" onclick="closeNav()">Blog</a>
     <a href="#" data-i18n="nav.about" onclick="closeNav()">About</a>
   </div>
 
   <!-- HERO -->
   <section id="hero">
     <div class="hero-left">
-      <p class="hero-eyebrow" data-i18n="hero.eyebrow">Professor &amp; Research Scholar</p>
       <h1 class="hero-name" data-i18n-html="hero.name">
-        Kim <span>Youngmi</span>
+        Professor Kim <span>Youngmi</span>
       </h1>
       <div class="hero-rule"></div>
       <p class="hero-title" data-i18n="hero.title">Department of Public Administration at Sangmyung University</p>
       <p class="hero-bio" data-i18n="hero.bio">
         Examining the intersection of governance, institutional reform, and public policy in contemporary Korea and East Asia — with a commitment to rigorous scholarship that informs practice.
       </p>
-      <blockquote class="hero-quote" data-i18n="hero.quote">
-        "Placeholder — Good governance is not a destination but a discipline: a continuous reckoning between power, accountability, and the public good."
-      </blockquote>
       <div class="hero-social">
         <a href="#" data-i18n="hero.scholar">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 12h8M12 8l4 4-4 4"/></svg>
@@ -1025,15 +1113,24 @@
     </div>
 
     <div class="hero-right">
-      <img class="portrait-photo" src="profile.jpg" alt="Professor Kim Youngmi" />
+      <img class="portrait-photo" src="magazine.png" alt="Professor Kim Youngmi" />
     </div>
 
-    <a class="scroll-down" href="#research">
+    <a class="scroll-down" href="#philosophy">
       <span>Scroll</span>
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
         <path d="M4 7l6 6 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </a>
+  </section>
+
+  <!-- PHILOSOPHY -->
+  <section id="philosophy">
+    <div class="philosophy-rule reveal"></div>
+    <blockquote class="philosophy-quote reveal" data-i18n="philosophy.quote">
+      "Good governance is not a destination but a discipline: a continuous reckoning between power, accountability, and the public good."
+    </blockquote>
+    <p class="philosophy-attr reveal" data-i18n="philosophy.attr">Kim Youngmi — Research Philosophy</p>
   </section>
 
   <!-- RESEARCH AREAS -->
@@ -1140,11 +1237,11 @@
       </div>
       <div class="mentorship-stat">
         <div class="stat-item">
-          <span class="stat-num">00+</span>
+          <span class="stat-num">100+</span>
           <span class="stat-label" data-i18n="teach.stat1">Graduate Students Advised</span>
         </div>
         <div class="stat-item">
-          <span class="stat-num">00+</span>
+          <span class="stat-num">30+</span>
           <span class="stat-label" data-i18n="teach.stat2">Years of Teaching</span>
         </div>
       </div>
@@ -1208,12 +1305,14 @@
     const t = {
       en: {
         'nav.brand': 'KIM YOUNGMI', 'nav.publications': 'Publications', 'nav.blog': 'Blog', 'nav.about': 'About',
-        'hero.eyebrow': 'Professor & Research Scholar',
-        'hero.name': 'Kim <span>Youngmi</span>',
+        'hero.eyebrow': 'Research Scholar & Educator',
+        'hero.name': 'Professor Kim <span>Youngmi</span>',
         'hero.title': 'Department of Public Administration at Sangmyung University',
         'hero.bio': 'Examining the intersection of governance, institutional reform, and public policy in contemporary Korea and East Asia — with a commitment to rigorous scholarship that informs practice.',
         'hero.quote': '"Placeholder — Good governance is not a destination but a discipline: a continuous reckoning between power, accountability, and the public good."',
         'hero.scholar': 'Google Scholar', 'hero.researchgate': 'ResearchGate', 'hero.faculty': 'Faculty Page',
+        'philosophy.quote': '"Good governance is not a destination but a discipline: a continuous reckoning between power, accountability, and the public good."',
+        'philosophy.attr': 'Kim Youngmi — Research Philosophy',
         'research.title': 'Research Areas',
         'r1.title': 'Public Governance & Institutional Reform',
         'r1.desc': 'Placeholder — administrative restructuring, bureaucratic accountability, and state capacity in Korea and comparative East Asian contexts.',
@@ -1243,12 +1342,14 @@
       },
       ko: {
         'nav.brand': '김영미', 'nav.publications': '연구논문', 'nav.blog': '블로그', 'nav.about': '소개',
-        'hero.eyebrow': '교수 & 연구학자',
-        'hero.name': '김 <span>영미</span>',
+        'hero.eyebrow': '연구학자 & 교육자',
+        'hero.name': '김영미 <span>교수</span>',
         'hero.title': '상명대학교 행정학과',
         'hero.bio': '거버넌스, 제도 개혁, 그리고 현대 한국과 동아시아의 공공정책이 교차하는 지점을 탐구하며, 엄밀한 학문적 연구가 실천에 기여한다는 신념으로 연구하고 있습니다.',
         'hero.quote': '"좋은 거버넌스는 목적지가 아니라 하나의 규율입니다. 권력, 책임, 그리고 공공의 선 사이에서 끊임없이 이루어지는 성찰의 과정입니다."',
         'hero.scholar': '구글 스칼라', 'hero.researchgate': '리서치게이트', 'hero.faculty': '교수 홈페이지',
+        'philosophy.quote': '"좋은 거버넌스는 목적지가 아니라 하나의 규율입니다. 권력, 책임, 그리고 공공의 선 사이에서 끊임없이 이루어지는 성찰의 과정입니다."',
+        'philosophy.attr': '김영미 — 연구 철학',
         'research.title': '연구 분야',
         'r1.title': '공공 거버넌스 및 제도 개혁',
         'r1.desc': '플레이스홀더 — 행정 구조조정, 관료적 책임, 한국 및 동아시아 비교 맥락에서의 국가 역량.',
@@ -1292,11 +1393,33 @@
         const key = el.dataset.i18nPh;
         if (t[lang][key] !== undefined) el.placeholder = t[lang][key];
       });
-      document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.lang === lang);
+      const currentLangEl = document.getElementById('currentLang');
+      if (currentLangEl) currentLangEl.textContent = lang.toUpperCase();
+      document.querySelectorAll('.lang-option').forEach(opt => {
+        opt.classList.toggle('active', opt.dataset.lang === lang);
       });
       localStorage.setItem('lang', lang);
     }
+
+    // ── LANGUAGE DROPDOWN ──
+    const langDropdown = document.getElementById('langDropdown');
+    const langToggleBtn = document.getElementById('langToggleBtn');
+
+    langToggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      langDropdown.classList.toggle('open');
+    });
+
+    document.querySelectorAll('.lang-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        setLang(opt.dataset.lang);
+        langDropdown.classList.remove('open');
+      });
+    });
+
+    document.addEventListener('click', () => {
+      langDropdown.classList.remove('open');
+    });
 
     // Restore saved language
     const saved = localStorage.getItem('lang');
