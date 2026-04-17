@@ -440,81 +440,106 @@
       flex-direction: column;
     }
 
+    .work-entry {
+      padding-top: 3.5rem;
+    }
+
+    .work-year-big {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4rem, 8vw, 7rem);
+      font-weight: 300;
+      color: rgba(135,90,18,0.13);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      user-select: none;
+    }
+
+    .work-papers {
+      border-top: 1px solid rgba(140,94,20,0.15);
+    }
+
     .work-item {
-      display: grid;
-      grid-template-columns: 6rem 1fr auto;
-      align-items: start;
-      gap: 2.5rem;
-      padding: 2.5rem 0;
-      border-bottom: 1px solid rgba(140,94,20,0.12);
-      transition: border-color 0.3s;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 3rem;
+      padding: 1.6rem 0 1.6rem 1.75rem;
+      border-bottom: 1px solid rgba(140,94,20,0.08);
+      overflow: hidden;
       cursor: default;
     }
 
-    .work-item:first-child {
-      border-top: 1px solid rgba(140,94,20,0.12);
-    }
-
-    .work-item:hover {
-      border-color: rgba(196,132,10,0.2);
-    }
-
-    .work-year {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.25rem;
-      color: var(--gold);
-      padding-top: 0.2rem;
-    }
-
-    .work-meta-type {
-      font-size: 0.8125rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .work-badge {
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--navy);
+    .work-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0;
+      width: 2px; height: 0;
       background: var(--gold);
-      padding: 0.15rem 0.5rem;
-      border-radius: 2px;
+      transition: height 0.35s ease;
     }
+
+    .work-item::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(140,94,20,0.04);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+    }
+
+    .work-item:hover::before { height: 100%; }
+    .work-item:hover::after  { opacity: 1; }
+
+    .work-body {
+      display: flex;
+      align-items: baseline;
+      gap: 1.5rem;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .work-index {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.85rem;
+      color: rgba(135,90,18,0.35);
+      letter-spacing: 0.08em;
+      flex-shrink: 0;
+      transition: color 0.35s;
+    }
+
+    .work-item:hover .work-index { color: var(--gold); }
 
     .work-title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1.2rem;
-      font-weight: 400;
+      font-size: 1.35rem;
+      font-weight: 500;
       color: var(--ivory);
       line-height: 1.4;
-      margin-bottom: 0.5rem;
+      transition: transform 0.35s ease, color 0.35s ease;
     }
 
-    .work-journal {
-      font-size: 1rem;
-      font-style: italic;
-      color: var(--muted);
+    .work-item:hover .work-title {
+      transform: translateX(6px);
+      color: var(--gold2);
     }
 
     .work-link {
-      font-size: 0.8125rem;
-      letter-spacing: 0.18em;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: var(--gold);
+      color: var(--muted);
       text-decoration: none;
-      opacity: 0.7;
-      transition: opacity 0.3s;
-      padding-top: 0.3rem;
+      transition: color 0.25s;
       white-space: nowrap;
+      padding: 0.5rem 0;
+      position: relative;
+      z-index: 1;
     }
 
-    .work-link:hover { opacity: 1; }
+    .work-link:hover { color: var(--gold); }
 
     .works-footer {
       margin-top: 3.5rem;
@@ -878,7 +903,6 @@
     html[lang="ko"] .research-area-title,
     html[lang="ko"] .research-num,
     html[lang="ko"] .work-title,
-    html[lang="ko"] .work-year,
     html[lang="ko"] .section-count,
     html[lang="ko"] .footer-name,
     html[lang="ko"] .contact-intro-heading,
@@ -1027,11 +1051,10 @@
 
       .research-grid { grid-template-columns: 1fr; }
 
-      .work-item {
-        grid-template-columns: auto 1fr;
-        gap: 1.25rem;
-      }
-      .work-link { display: none; }
+      .work-year-big { font-size: clamp(3rem, 14vw, 4.5rem); }
+      .work-item { flex-direction: column; align-items: flex-start; gap: 0.75rem; padding: 1.25rem 0 1.25rem 1.25rem; }
+      .work-item:hover .work-title { transform: none; }
+      .work-body { flex-direction: column; gap: 0.2rem; }
 
       section { padding: 4rem var(--gutter); }
       #philosophy { padding: 5rem var(--gutter); }
@@ -1256,36 +1279,45 @@
       <span class="section-count">03</span>
     </div>
     <div class="works-list">
-      <div class="work-item reveal">
-        <span class="work-year">2024</span>
-        <div>
-          <p class="work-meta-type"><span data-i18n="works.journal">Journal Article</span> <span class="work-badge" data-i18n="works.latest">Latest</span></p>
-          <p class="work-title" data-i18n="w1.title">Placeholder — Institutional Trust and Bureaucratic Legitimacy in Post-Reform Korea</p>
-          <p class="work-journal" data-i18n="w1.journal">Korean Journal of Public Administration, Vol. 00, pp. 00–00</p>
+      <div class="work-entry reveal">
+        <p class="work-year-big">2024</p>
+        <div class="work-papers">
+          <div class="work-item">
+            <div class="work-body">
+              <span class="work-index">01</span>
+              <p class="work-title" data-i18n="w1.title">Institutional Trust and Bureaucratic Legitimacy in Post-Reform Korea</p>
+            </div>
+            <a class="work-link" href="publications.html">View ↗</a>
+          </div>
         </div>
-        <a class="work-link" href="#" data-i18n="works.view">View →</a>
       </div>
-      <div class="work-item reveal">
-        <span class="work-year">2023</span>
-        <div>
-          <p class="work-meta-type"><span data-i18n="works.chapter">Book Chapter</span></p>
-          <p class="work-title" data-i18n="w2.title">Placeholder — Participatory Governance and the Limits of Deliberation</p>
-          <p class="work-journal" data-i18n="w2.journal">In <em>Handbook of East Asian Public Administration</em>, Routledge</p>
+      <div class="work-entry reveal">
+        <p class="work-year-big">2023</p>
+        <div class="work-papers">
+          <div class="work-item">
+            <div class="work-body">
+              <span class="work-index">02</span>
+              <p class="work-title" data-i18n="w2.title">Participatory Governance and the Limits of Deliberation</p>
+            </div>
+            <a class="work-link" href="publications.html">View ↗</a>
+          </div>
         </div>
-        <a class="work-link" href="#" data-i18n="works.view">View →</a>
       </div>
-      <div class="work-item reveal">
-        <span class="work-year">2022</span>
-        <div>
-          <p class="work-meta-type"><span data-i18n="works.journal">Journal Article</span></p>
-          <p class="work-title" data-i18n="w3.title">Placeholder — Digital Transformation of Public Services: Evidence from Local Government</p>
-          <p class="work-journal" data-i18n="w3.journal2">Government Information Quarterly, Vol. 00, No. 0</p>
+      <div class="work-entry reveal">
+        <p class="work-year-big">2022</p>
+        <div class="work-papers">
+          <div class="work-item">
+            <div class="work-body">
+              <span class="work-index">03</span>
+              <p class="work-title" data-i18n="w3.title">Digital Transformation of Public Services: Evidence from Local Government</p>
+            </div>
+            <a class="work-link" href="publications.html">View ↗</a>
+          </div>
         </div>
-        <a class="work-link" href="#" data-i18n="works.view">View →</a>
       </div>
     </div>
     <div class="works-footer reveal">
-      <a class="btn-outline" href="#">
+      <a class="btn-outline" href="publications.html">
         <span data-i18n="works.all">All Publications</span>
         <svg width="14" height="8" viewBox="0 0 14 8" fill="none">
           <path d="M1 4h12M9 1l4 3-4 3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>
