@@ -37,11 +37,16 @@
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 100;
+      background: linear-gradient(to bottom, rgba(13,27,42,0.95) 0%, transparent 100%);
+    }
+
+    .nav-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.6rem var(--gutter);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1.6rem var(--gutter);
-      background: linear-gradient(to bottom, rgba(13,27,42,0.95) 0%, transparent 100%);
     }
 
     .nav-brand {
@@ -489,13 +494,15 @@
 
   <!-- NAV -->
   <nav>
-    <a class="nav-brand" href="#">KIM YOUNGMI</a>
-    <ul class="nav-links">
-      <li><a href="#">Home</a></li>
-      <li><a href="#">Publications</a></li>
-      <li><a href="#">Blog</a></li>
-      <li><a href="#">About</a></li>
-    </ul>
+    <div class="nav-inner">
+      <a class="nav-brand" href="#">KIM YOUNGMI</a>
+      <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Publications</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">About</a></li>
+      </ul>
+    </div>
   </nav>
 
   <!-- HERO -->
