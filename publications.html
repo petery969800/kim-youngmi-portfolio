@@ -116,11 +116,12 @@
 
     /* ── PAGE HEADER ── */
     .page-header {
-      padding: 10rem var(--gutter) 4rem;
+      padding: 10rem var(--gutter) 5rem;
+      border-bottom: 1px solid rgba(140,94,20,0.12);
     }
     .page-header-label {
       font-size: 0.8rem; letter-spacing: 0.28em; text-transform: uppercase;
-      color: var(--gold); margin-bottom: 1rem;
+      color: var(--gold); margin-bottom: 1.25rem;
       display: flex; align-items: center; gap: 0.75rem;
     }
     .page-header-label::before {
@@ -128,39 +129,94 @@
     }
     .page-header h1 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.4rem, 4vw, 3.6rem);
+      font-size: clamp(3rem, 6vw, 5.5rem);
       font-weight: 300; color: var(--ivory); line-height: 1;
+      letter-spacing: -0.01em;
     }
     html[lang="ko"] .page-header h1 { font-family: 'Noto Serif KR', serif; }
 
     /* ── PUBLICATION LIST ── */
     .pub-list {
-      padding: 0 var(--gutter) 7rem;
+      padding: 0 var(--gutter) 8rem;
     }
 
-    .year-group + .year-group { margin-top: 2.5rem; }
+    /* ── YEAR GROUP ── */
+    .year-group {
+      padding-top: 5rem;
+    }
 
     .year-label {
-      font-size: 0.75rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--gold);
-      padding-bottom: 1rem;
-      border-bottom: 1px solid rgba(140,94,20,0.2);
-      margin-bottom: 0;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(5rem, 10vw, 8.5rem);
+      font-weight: 300;
+      color: rgba(135,90,18,0.13);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+      user-select: none;
     }
 
-    /* ── PUB ROW ── */
+    .year-papers {
+      border-top: 1px solid rgba(140,94,20,0.15);
+    }
+
+    /* ── PUB ITEM ── */
     .pub-item {
+      position: relative;
       display: flex;
       justify-content: space-between;
-      align-items: baseline;
-      gap: 2rem;
-      padding: 1.1rem 0;
+      align-items: center;
+      gap: 3rem;
+      padding: 1.6rem 0 1.6rem 1.75rem;
       border-bottom: 1px solid rgba(140,94,20,0.08);
+      overflow: hidden;
+      cursor: default;
     }
 
-    .pub-body { flex: 1; }
+    /* animated gold bar on left */
+    .pub-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0;
+      width: 2px;
+      height: 0;
+      background: var(--gold);
+      transition: height 0.35s ease;
+    }
+
+    /* warm wash on hover */
+    .pub-item::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(140,94,20,0.04);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+    }
+
+    .pub-item:hover::before { height: 100%; }
+    .pub-item:hover::after  { opacity: 1; }
+
+    /* ── PUB CONTENT ── */
+    .pub-body {
+      display: flex;
+      align-items: baseline;
+      gap: 1.5rem;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .pub-index {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.85rem;
+      color: rgba(135,90,18,0.35);
+      letter-spacing: 0.08em;
+      flex-shrink: 0;
+      transition: color 0.35s;
+    }
+
+    .pub-item:hover .pub-index { color: var(--gold); }
 
     .pub-title {
       font-family: 'Cormorant Garamond', serif;
@@ -168,40 +224,45 @@
       font-weight: 500;
       color: var(--ivory);
       line-height: 1.4;
-      margin-bottom: 0.25rem;
+      transition: transform 0.35s ease, color 0.35s ease;
     }
+
     html[lang="ko"] .pub-title { font-family: 'Noto Serif KR', serif; }
 
-    .pub-journal {
-      font-size: 0.875rem;
-      color: var(--muted);
-      font-style: italic;
+    .pub-item:hover .pub-title {
+      transform: translateX(6px);
+      color: var(--gold2);
     }
 
     /* ── LINKS ── */
     .pub-links {
       display: flex;
-      gap: 1rem;
+      gap: 0;
       flex-shrink: 0;
       align-items: center;
+      position: relative;
+      z-index: 1;
     }
 
     .pub-link {
       font-size: 0.75rem;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--muted);
       text-decoration: none;
-      transition: color 0.2s;
+      transition: color 0.25s;
       display: flex;
       align-items: center;
       gap: 0.3rem;
+      padding: 0.5rem 1rem;
       white-space: nowrap;
+      min-height: 44px;
     }
+
     .pub-link:hover { color: var(--gold); }
+
     .pub-link + .pub-link {
-      padding-left: 1rem;
-      border-left: 1px solid rgba(140,94,20,0.2);
+      border-left: 1px solid rgba(140,94,20,0.15);
     }
 
     /* ── FOOTER ── */
@@ -216,6 +277,7 @@
     /* ── TABLET ── */
     @media (max-width: 1024px) {
       .page-header { padding-top: 9rem; }
+      .year-label { font-size: clamp(4rem, 9vw, 6rem); }
     }
 
     /* ── MOBILE ── */
@@ -226,12 +288,15 @@
       .nav-toggle { display: flex; }
 
       .page-header { padding-top: 7rem; padding-bottom: 3rem; }
-      .page-header h1 { font-size: clamp(2rem, 8vw, 2.6rem); }
 
-      .pub-list { padding-bottom: 4rem; }
-      .pub-item { flex-direction: column; gap: 0.75rem; align-items: flex-start; }
-      .pub-links { gap: 1.25rem; }
-      .pub-link + .pub-link { padding-left: 1.25rem; }
+      .year-group { padding-top: 3.5rem; }
+      .year-label { font-size: clamp(3.5rem, 16vw, 5rem); margin-bottom: 1rem; }
+
+      .pub-item { flex-direction: column; align-items: flex-start; gap: 0.75rem; padding: 1.25rem 0 1.25rem 1.25rem; }
+      .pub-item:hover .pub-title { transform: none; }
+
+      .pub-body { flex-direction: column; gap: 0.25rem; }
+      .pub-links { padding-left: 0; }
 
       footer { flex-direction: column; gap: 0.75rem; text-align: center; padding: 2rem var(--gutter); }
     }
@@ -281,79 +346,94 @@
 
     <div class="year-group">
       <p class="year-label">2024</p>
-      <div class="pub-item">
-        <div class="pub-body">
-          <p class="pub-title">Institutional Trust and Bureaucratic Legitimacy in Post-Reform Korea</p>
+      <div class="year-papers">
+        <div class="pub-item">
+          <div class="pub-body">
+            <span class="pub-index">01</span>
+            <p class="pub-title">Institutional Trust and Bureaucratic Legitimacy in Post-Reform Korea</p>
+          </div>
+          <div class="pub-links">
+            <a class="pub-link" href="#" target="_blank" rel="noopener">View ↗</a>
+            <a class="pub-link" href="#" download>PDF ↓</a>
+          </div>
         </div>
-        <div class="pub-links">
-          <a class="pub-link" href="#" target="_blank" rel="noopener">View ↗</a>
-          <a class="pub-link" href="#" download>PDF ↓</a>
-        </div>
-      </div>
-      <div class="pub-item">
-        <div class="pub-body">
-          <p class="pub-title">Citizen Participation in Digital Public Services: Evidence from Municipal e-Government Platforms</p>
-        </div>
-        <div class="pub-links">
-          <a class="pub-link" href="#" target="_blank" rel="noopener">View ↗</a>
-          <a class="pub-link" href="#" download>PDF ↓</a>
+        <div class="pub-item">
+          <div class="pub-body">
+            <span class="pub-index">02</span>
+            <p class="pub-title">Citizen Participation in Digital Public Services: Evidence from Municipal e-Government Platforms</p>
+          </div>
+          <div class="pub-links">
+            <a class="pub-link" href="#" target="_blank" rel="noopener">View ↗</a>
+            <a class="pub-link" href="#" download>PDF ↓</a>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="year-group">
       <p class="year-label">2023</p>
-      <div class="pub-item">
-        <div class="pub-body">
-          <p class="pub-title">Bureaucratic Autonomy and Policy Discretion in Korean Local Government</p>
+      <div class="year-papers">
+        <div class="pub-item">
+          <div class="pub-body">
+            <span class="pub-index">03</span>
+            <p class="pub-title">Bureaucratic Autonomy and Policy Discretion in Korean Local Government</p>
+          </div>
+          <div class="pub-links">
+            <a class="pub-link" href="#" target="_blank" rel="noopener">View ↗</a>
+            <a class="pub-link" href="#" download>PDF ↓</a>
+          </div>
         </div>
-        <div class="pub-links">
-          <a class="pub-link" href="#" target="_blank" rel="noopener">View ↗</a>
-          <a class="pub-link" href="#" download>PDF ↓</a>
-        </div>
-      </div>
-      <div class="pub-item">
-        <div class="pub-body">
-          <p class="pub-title">Welfare State Retrenchment and Administrative Capacity: A Comparative Study of East Asian Democracies</p>
-        </div>
-        <div class="pub-links">
-          <a class="pub-link" href="#" target="_blank" rel="noopener">View ↗</a>
-          <a class="pub-link" href="#" download>PDF ↓</a>
+        <div class="pub-item">
+          <div class="pub-body">
+            <span class="pub-index">04</span>
+            <p class="pub-title">Welfare State Retrenchment and Administrative Capacity: A Comparative Study of East Asian Democracies</p>
+          </div>
+          <div class="pub-links">
+            <a class="pub-link" href="#" target="_blank" rel="noopener">View ↗</a>
+            <a class="pub-link" href="#" download>PDF ↓</a>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="year-group">
       <p class="year-label">2022</p>
-      <div class="pub-item">
-        <div class="pub-body">
-          <p class="pub-title">Digital Transformation of Public Services: Evidence from Local Government</p>
+      <div class="year-papers">
+        <div class="pub-item">
+          <div class="pub-body">
+            <span class="pub-index">05</span>
+            <p class="pub-title">Digital Transformation of Public Services: Evidence from Local Government</p>
+          </div>
+          <div class="pub-links">
+            <a class="pub-link" href="#" target="_blank" rel="noopener">View ↗</a>
+            <a class="pub-link" href="#" download>PDF ↓</a>
+          </div>
         </div>
-        <div class="pub-links">
-          <a class="pub-link" href="#" target="_blank" rel="noopener">View ↗</a>
-          <a class="pub-link" href="#" download>PDF ↓</a>
-        </div>
-      </div>
-      <div class="pub-item">
-        <div class="pub-body">
-          <p class="pub-title">Accountability Mechanisms and Public Trust: A Longitudinal Analysis of Korean Administrative Reform</p>
-        </div>
-        <div class="pub-links">
-          <a class="pub-link" href="#" target="_blank" rel="noopener">View ↗</a>
-          <a class="pub-link" href="#" download>PDF ↓</a>
+        <div class="pub-item">
+          <div class="pub-body">
+            <span class="pub-index">06</span>
+            <p class="pub-title">Accountability Mechanisms and Public Trust: A Longitudinal Analysis of Korean Administrative Reform</p>
+          </div>
+          <div class="pub-links">
+            <a class="pub-link" href="#" target="_blank" rel="noopener">View ↗</a>
+            <a class="pub-link" href="#" download>PDF ↓</a>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="year-group">
       <p class="year-label">2021</p>
-      <div class="pub-item">
-        <div class="pub-body">
-          <p class="pub-title">Deliberative Governance and Policy Legitimacy: Lessons from Korea's Participatory Budgeting Experiment</p>
-        </div>
-        <div class="pub-links">
-          <a class="pub-link" href="#" target="_blank" rel="noopener">View ↗</a>
-          <a class="pub-link" href="#" download>PDF ↓</a>
+      <div class="year-papers">
+        <div class="pub-item">
+          <div class="pub-body">
+            <span class="pub-index">07</span>
+            <p class="pub-title">Deliberative Governance and Policy Legitimacy: Lessons from Korea's Participatory Budgeting Experiment</p>
+          </div>
+          <div class="pub-links">
+            <a class="pub-link" href="#" target="_blank" rel="noopener">View ↗</a>
+            <a class="pub-link" href="#" download>PDF ↓</a>
+          </div>
         </div>
       </div>
     </div>
