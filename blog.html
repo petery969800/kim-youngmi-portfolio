@@ -371,6 +371,82 @@
       border: none;
     }
 
+    /* ── SHARE BAR ── */
+    .post-share {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding-top: 1.25rem;
+      margin-top: 1.5rem;
+      border-top: 1px solid rgba(140,94,20,0.10);
+      flex-wrap: wrap;
+    }
+
+    .post-share-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-right: 0.25rem;
+    }
+
+    .share-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 0.3rem 0.65rem;
+      border: 1px solid rgba(140,94,20,0.15);
+      background: none;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+      line-height: 1;
+      min-height: 28px;
+    }
+
+    .share-btn:hover { color: var(--gold); border-color: rgba(140,94,20,0.4); }
+    .share-btn.copied { color: var(--gold); border-color: rgba(140,94,20,0.4); }
+
+    /* ── PAGINATION ── */
+    .pagination {
+      max-width: calc(720px + 2 * var(--gutter));
+      margin: 0 auto;
+      padding: 0 var(--gutter) 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .page-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 40px;
+      min-height: 40px;
+      padding: 0.5rem 0.9rem;
+      border: 1px solid rgba(140,94,20,0.22);
+      background: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      color: var(--ivory2);
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+      text-decoration: none;
+    }
+
+    .page-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--gold); }
+    .page-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(140,94,20,0.07); }
+    .page-btn:disabled { opacity: 0.3; cursor: default; }
+
     /* ── DIVIDER IN POST ── */
     .post-divider {
       width: 2rem;
@@ -617,6 +693,91 @@
         </article>`;
       }).join('');
     })();
+
+    // ── SHARE BARS ──
+    function sharePost(platform, title) {
+      const url  = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(title || document.title);
+      const targets = {
+        x:         `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
+        facebook:  `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+        linkedin:  `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
+        kakao:     `https://story.kakao.com/share?url=${url}`,
+      };
+      window.open(targets[platform], '_blank', 'width=620,height=420,noopener');
+    }
+
+    function copyLink(btn) {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = '✓ Copied';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+
+    (function addShareBars() {
+      document.querySelectorAll('.post').forEach(post => {
+        const inner = post.querySelector('.post-inner');
+        if (!inner || inner.querySelector('.post-share')) return;
+        const title = (post.querySelector('h2') || {}).textContent || '';
+        const bar = document.createElement('div');
+        bar.className = 'post-share';
+        bar.innerHTML = `
+          <span class="post-share-label">Share</span>
+          <button class="share-btn" onclick="sharePost('x',${JSON.stringify(title)})">X</button>
+          <button class="share-btn" onclick="sharePost('facebook','')">Facebook</button>
+          <button class="share-btn" onclick="sharePost('linkedin','')">LinkedIn</button>
+          <button class="share-btn" onclick="sharePost('kakao','')">KakaoStory</button>
+          <button class="share-btn" onclick="copyLink(this)">Copy link</button>
+        `;
+        inner.appendChild(bar);
+      });
+    })();
+
+    // ── PAGINATION ──
+    const POSTS_PER_PAGE = 10;
+    let currentPage = 1;
+
+    function paginate() {
+      const posts = Array.from(document.querySelectorAll('.feed .post'));
+      const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
+
+      if (totalPages <= 1) {
+        const existing = document.getElementById('pagination');
+        if (existing) existing.remove();
+        posts.forEach(p => p.style.display = '');
+        return;
+      }
+
+      posts.forEach((post, i) => {
+        post.style.display = Math.floor(i / POSTS_PER_PAGE) + 1 === currentPage ? '' : 'none';
+      });
+
+      const existing = document.getElementById('pagination');
+      if (existing) existing.remove();
+
+      const nav = document.createElement('nav');
+      nav.id = 'pagination';
+      nav.className = 'pagination';
+
+      let html = `<button class="page-btn" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>←</button>`;
+      for (let i = 1; i <= totalPages; i++) {
+        html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+      }
+      html += `<button class="page-btn" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>→</button>`;
+
+      nav.innerHTML = html;
+      document.querySelector('.feed').after(nav);
+    }
+
+    function goToPage(page) {
+      currentPage = page;
+      paginate();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    paginate();
 
     const t = {
       en: {
