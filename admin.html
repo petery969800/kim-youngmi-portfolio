@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Kim Youngmi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #FAF6EE;
+      --navy2:  #EDE5D0;
+      --ivory:  #28190E;
+      --ivory2: #5A4530;
+      --gold:   #875A12;
+      --gold2:  #6A4610;
+      --muted:  #6B5A42;
+      --border: rgba(140,94,20,0.18);
+    }
+
+    body {
+      background: var(--navy);
+      color: var(--ivory);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    /* ── LOGIN ── */
+    #loginScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .login-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      width: 100%;
+      max-width: 380px;
+      padding: 3rem 2.5rem;
+    }
+
+    .login-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      color: var(--ivory);
+      margin-bottom: 0.4rem;
+    }
+
+    .login-sub {
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2.5rem;
+    }
+
+    .login-label {
+      display: block;
+      font-size: 0.78rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .login-input {
+      width: 100%;
+      background: var(--navy);
+      border: 1px solid var(--border);
+      padding: 0.85rem 1rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: var(--ivory);
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 1.5rem;
+    }
+
+    .login-input:focus { border-color: var(--gold); }
+
+    .login-btn {
+      width: 100%;
+      background: transparent;
+      border: 1px solid rgba(140,94,20,0.45);
+      padding: 0.9rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ivory2);
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+      min-height: 44px;
+    }
+
+    .login-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+    .login-error {
+      margin-top: 1rem;
+      font-size: 0.82rem;
+      color: #b33;
+      display: none;
+    }
+
+    /* ── DASHBOARD ── */
+    #dashboard { display: none; min-height: 100vh; }
+
+    .admin-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(250,246,238,0.97);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+    }
+
+    .admin-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      letter-spacing: 0.12em;
+      color: var(--ivory);
+    }
+
+    .admin-brand span {
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-left: 0.75rem;
+    }
+
+    .header-actions { display: flex; gap: 1rem; align-items: center; }
+
+    .btn-ghost {
+      background: none;
+      border: 1px solid var(--border);
+      padding: 0.4rem 1rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+    }
+
+    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+    .btn-primary {
+      background: transparent;
+      border: 1px solid rgba(140,94,20,0.45);
+      padding: 0.55rem 1.25rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      min-height: 36px;
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover { background: rgba(140,94,20,0.08); border-color: var(--gold); }
+
+    .btn-danger {
+      background: none;
+      border: 1px solid rgba(179,51,51,0.3);
+      padding: 0.45rem 1rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #b33;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      min-height: 32px;
+    }
+
+    .btn-danger:hover { background: rgba(179,51,51,0.06); border-color: #b33; }
+
+    /* ── LAYOUT ── */
+    .admin-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: calc(100vh - 57px);
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      border-right: 1px solid var(--border);
+      background: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-tabs {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-tab {
+      display: block;
+      width: 100%;
+      padding: 1rem 1.5rem;
+      background: none;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color 0.2s, background 0.2s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sidebar-tab:last-child { border-bottom: none; }
+    .sidebar-tab:hover { background: rgba(140,94,20,0.04); color: var(--ivory); }
+    .sidebar-tab.active { color: var(--gold); background: rgba(140,94,20,0.05); }
+
+    .tab-count {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: rgba(135,90,18,0.4);
+    }
+
+    .sidebar-tab.active .tab-count { color: rgba(135,90,18,0.7); }
+
+    .sidebar-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.75rem 0;
+    }
+
+    .sidebar-new-btn {
+      margin: 0.75rem 1rem;
+    }
+
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      border-left: 2px solid transparent;
+      gap: 0.5rem;
+    }
+
+    .list-item:hover { background: rgba(140,94,20,0.04); }
+
+    .list-item.active {
+      background: rgba(140,94,20,0.07);
+      border-left-color: var(--gold);
+    }
+
+    .list-item-info { flex: 1; min-width: 0; }
+
+    .list-item-title {
+      font-size: 0.875rem;
+      color: var(--ivory);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 0.1rem;
+    }
+
+    .list-item-meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .list-item-del {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      padding: 4px;
+      font-size: 1rem;
+      line-height: 1;
+      transition: color 0.2s;
+      flex-shrink: 0;
+      opacity: 0;
+    }
+
+    .list-item:hover .list-item-del { opacity: 1; }
+    .list-item-del:hover { color: #b33; }
+
+    /* ── EDITOR PANEL ── */
+    .editor-panel {
+      padding: 2.5rem 3rem;
+      overflow-y: auto;
+    }
+
+    .editor-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      min-height: 400px;
+      gap: 1rem;
+      color: var(--muted);
+    }
+
+    .editor-empty-icon {
+      font-size: 2.5rem;
+      opacity: 0.2;
+    }
+
+    .editor-empty p { font-size: 0.9rem; }
+
+    .editor-section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 300;
+      color: var(--ivory);
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-hint {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.35rem;
+      font-style: italic;
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      background: white;
+      border: 1px solid var(--border);
+      padding: 0.75rem 1rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: var(--ivory);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-input:focus, .form-select:focus { border-color: var(--gold); }
+
+    .form-input.half { width: auto; max-width: 200px; }
+
+    /* ── RICH TEXT EDITOR ── */
+    .editor-toolbar {
+      display: flex;
+      gap: 4px;
+      padding: 0.5rem;
+      background: var(--navy2);
+      border: 1px solid var(--border);
+      border-bottom: none;
+    }
+
+    .toolbar-btn {
+      background: none;
+      border: 1px solid transparent;
+      padding: 4px 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82rem;
+      color: var(--ivory2);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      min-height: 28px;
+      min-width: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .toolbar-btn:hover { background: white; border-color: var(--border); }
+    .toolbar-btn.active { background: white; border-color: var(--gold); color: var(--gold); }
+    .toolbar-sep { width: 1px; background: var(--border); margin: 0 2px; }
+
+    .editor-body {
+      min-height: 280px;
+      max-height: 500px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      padding: 1rem 1.25rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: var(--ivory);
+      line-height: 1.75;
+      outline: none;
+      background: white;
+      transition: border-color 0.2s;
+    }
+
+    .editor-body:focus { border-color: var(--gold); }
+    .editor-body p { margin-bottom: 0.75rem; }
+    .editor-body p:last-child { margin-bottom: 0; }
+
+    .editor-body .post-divider {
+      width: 2rem;
+      height: 1px;
+      background: rgba(140,94,20,0.35);
+      margin: 1rem 0;
+      display: block;
+    }
+
+    /* ── FORM ROW ── */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    /* ── FORM ACTIONS ── */
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .form-actions-right { margin-left: auto; }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--ivory);
+      color: var(--navy);
+      padding: 0.85rem 1.5rem;
+      font-size: 0.82rem;
+      letter-spacing: 0.05em;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    #toast.show { opacity: 1; transform: translateY(0); }
+
+    /* ── CONFIRM DIALOG ── */
+    #confirmOverlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(40,25,14,0.5);
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #confirmOverlay.show { display: flex; }
+
+    .confirm-card {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 2rem;
+      max-width: 340px;
+      width: 90%;
+    }
+
+    .confirm-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      color: var(--ivory);
+      margin-bottom: 0.75rem;
+    }
+
+    .confirm-text { font-size: 0.875rem; color: var(--muted); margin-bottom: 1.5rem; }
+
+    .confirm-actions { display: flex; gap: 0.75rem; }
+
+    /* ── MEDIA SECTION ── */
+    .media-section {
+      background: rgba(140,94,20,0.04);
+      border: 1px solid var(--border);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .media-section-title {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 900px) {
+      .admin-layout { grid-template-columns: 220px 1fr; }
+      .editor-panel { padding: 1.5rem; }
+    }
+
+    @media (max-width: 680px) {
+      .admin-layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN SCREEN -->
+  <div id="loginScreen">
+    <div class="login-card">
+      <p class="login-logo">KIM YOUNGMI</p>
+      <p class="login-sub">Admin Portal</p>
+      <label class="login-label" for="passwordInput">Password</label>
+      <input class="login-input" type="password" id="passwordInput" placeholder="Enter password"
+             onkeydown="if(event.key==='Enter') submitLogin()" />
+      <button class="login-btn" onclick="submitLogin()">Sign In</button>
+      <p class="login-error" id="loginError">Incorrect password. Please try again.</p>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard">
+    <header class="admin-header">
+      <div>
+        <span class="admin-brand">KIM YOUNGMI <span>Admin</span></span>
+      </div>
+      <div class="header-actions">
+        <a href="index.html" class="btn-ghost" target="_blank">View Site ↗</a>
+        <button class="btn-ghost" onclick="logout()">Sign Out</button>
+      </div>
+    </header>
+
+    <div class="admin-layout">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-tabs">
+          <button class="sidebar-tab active" id="tabBlog" onclick="switchTab('blog')">
+            Blog Posts <span class="tab-count" id="blogCount">0</span>
+          </button>
+          <button class="sidebar-tab" id="tabPub" onclick="switchTab('pub')">
+            Publications <span class="tab-count" id="pubCount">0</span>
+          </button>
+        </div>
+
+        <!-- Blog list -->
+        <div id="blogSection">
+          <div class="sidebar-new-btn">
+            <button class="btn-primary" style="width:100%" onclick="newBlogPost()">+ New Post</button>
+          </div>
+          <div class="sidebar-list" id="blogList"></div>
+        </div>
+
+        <!-- Publications list -->
+        <div id="pubSection" style="display:none">
+          <div class="sidebar-new-btn">
+            <button class="btn-primary" style="width:100%" onclick="newPublication()">+ New Publication</button>
+          </div>
+          <div class="sidebar-list" id="pubList"></div>
+        </div>
+      </aside>
+
+      <!-- EDITOR -->
+      <main class="editor-panel" id="editorPanel">
+        <div class="editor-empty" id="editorEmpty">
+          <div class="editor-empty-icon">✦</div>
+          <p>Select an item to edit, or create a new one.</p>
+        </div>
+
+        <!-- Blog editor -->
+        <div id="blogEditor" style="display:none">
+          <h2 class="editor-section-title" id="blogEditorTitle">New Post</h2>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="postDate">Date</label>
+              <input class="form-input" type="text" id="postDate" placeholder="e.g. April 17, 2026" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="postTitle">Title <span style="font-weight:300;text-transform:none;letter-spacing:0">(optional)</span></label>
+              <input class="form-input" type="text" id="postTitle" placeholder="Leave blank for title-less post" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Body</label>
+            <div class="editor-toolbar">
+              <button class="toolbar-btn" title="Bold" onmousedown="event.preventDefault(); document.execCommand('bold')"><strong>B</strong></button>
+              <button class="toolbar-btn" title="Italic" onmousedown="event.preventDefault(); document.execCommand('italic')"><em>I</em></button>
+              <div class="toolbar-sep"></div>
+              <button class="toolbar-btn" title="Add divider line" onmousedown="event.preventDefault(); insertDivider()">— Line</button>
+              <div class="toolbar-sep"></div>
+              <button class="toolbar-btn" title="Undo" onmousedown="event.preventDefault(); document.execCommand('undo')">↩</button>
+            </div>
+            <div class="editor-body" id="postBody" contenteditable="true"
+                 onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); document.execCommand('insertParagraph'); }"></div>
+            <p class="form-hint">Type and use the toolbar for formatting. Press Enter for new paragraph.</p>
+          </div>
+
+          <div class="media-section">
+            <p class="media-section-title">Image (optional)</p>
+            <div class="form-group" style="margin-bottom:0.75rem">
+              <label class="form-label" for="postImageUrl">Image URL</label>
+              <input class="form-input" type="url" id="postImageUrl" placeholder="https://..." />
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label" for="postImageCaption">Caption</label>
+              <input class="form-input" type="text" id="postImageCaption" placeholder="Optional caption" />
+            </div>
+          </div>
+
+          <div class="media-section">
+            <p class="media-section-title">YouTube Video (optional)</p>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label" for="postVideoUrl">YouTube URL</label>
+              <input class="form-input" type="url" id="postVideoUrl" placeholder="https://www.youtube.com/watch?v=..." />
+              <p class="form-hint">Paste any YouTube link — watch or share URL both work.</p>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn-primary" onclick="saveBlogPost()">Save Post</button>
+            <button class="btn-ghost" onclick="cancelEdit()">Cancel</button>
+            <div class="form-actions-right">
+              <button class="btn-danger" id="deleteBlogBtn" onclick="confirmDeletePost()" style="display:none">Delete Post</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Publication editor -->
+        <div id="pubEditor" style="display:none">
+          <h2 class="editor-section-title" id="pubEditorTitle">New Publication</h2>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="pubYear">Year</label>
+              <input class="form-input" type="number" id="pubYear" placeholder="2024" min="1900" max="2100" />
+            </div>
+            <div></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="pubTitle">Title</label>
+            <input class="form-input" type="text" id="pubTitle" placeholder="Full publication title" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="pubViewLink">View / DOI Link</label>
+              <input class="form-input" type="url" id="pubViewLink" placeholder="https://..." />
+              <p class="form-hint">Link to journal page or DOI</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pubPdfLink">PDF Link</label>
+              <input class="form-input" type="url" id="pubPdfLink" placeholder="https://..." />
+              <p class="form-hint">Direct PDF download link</p>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn-primary" onclick="savePublication()">Save Publication</button>
+            <button class="btn-ghost" onclick="cancelEdit()">Cancel</button>
+            <div class="form-actions-right">
+              <button class="btn-danger" id="deletePubBtn" onclick="confirmDeletePub()" style="display:none">Delete</button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast"></div>
+
+  <!-- CONFIRM DIALOG -->
+  <div id="confirmOverlay">
+    <div class="confirm-card">
+      <p class="confirm-title" id="confirmTitle">Confirm Delete</p>
+      <p class="confirm-text" id="confirmText">This cannot be undone.</p>
+      <div class="confirm-actions">
+        <button class="btn-danger" id="confirmOkBtn">Delete</button>
+        <button class="btn-ghost" onclick="closeConfirm()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── CONFIG ──
+    const ADMIN_PASSWORD = 'kim2024'; // Change this password by editing this line
+
+    const KEYS = {
+      auth:         'kim_admin_auth',
+      posts:        'kim_blog_posts',
+      publications: 'kim_publications',
+      initialized:  'kim_content_initialized',
+    };
+
+    // ── DEFAULT BLOG POSTS ──
+    const DEFAULT_POSTS = [
+      {
+        id: 'post-default-1',
+        date: 'April 17, 2026',
+        title: 'Thirty Years of Watching Government — What I\'ve Actually Learned',
+        body: `<p>I started studying public administration in the early 1990s, when Korea was still finding its footing as a democracy. The authoritarian era had just ended. There was a palpable hunger — in classrooms, in policy circles, in the streets — for institutions that could be trusted. Everyone agreed that government needed to change. The disagreements were about how, and how fast, and who would bear the cost of getting it wrong.</p><p>Thirty years later, I am still asking the same questions. The vocabulary has changed. We talk now about digital transformation, evidence-based policy, governance ecosystems, citizen-centered design. The frameworks multiply. The conferences fill up. And yet the gap between what government promises and what people experience remains stubbornly wide in ways that no new terminology seems to close.</p><p>So what have I actually learned? A few things — not grand theories, just observations that have held up across different administrations, different reform cycles, different decades.</p><div class="post-divider"></div><p><strong>Trust is not built by communication — it is built by consistency.</strong> Governments invest enormous energy in explaining themselves: press releases, public campaigns, transparency portals. But citizens do not primarily form their views of government through official channels. They form them through repeated, direct encounters — the clerk who helped them or didn't, the permit that came through or was lost in the system, the road that was fixed or ignored. Every interaction is a data point. Communication can never outrun the accumulation of those data points. If the experience is bad, the messaging makes it worse.</p><p><strong>Reform fatigue is real, and it is rational.</strong> One of the most demoralizing patterns I have watched over three decades is the reform cycle: a new administration arrives, announces sweeping changes to the bureaucracy, reorganizes ministries, rebrands programs, and declares a new era of governance. Then, four or five years later, the next administration arrives and does it again — often dismantling what the previous one built, rebranding what was just rebranded. Citizens learn, correctly, that announced change is not the same as change. Their skepticism is not apathy. It is the outcome of paying attention.</p><p><strong>The people closest to the problem usually know the most about it.</strong> This sounds obvious. It is, apparently, very hard to act on. The frontline civil servant who processes welfare applications, the nurse navigator in a public hospital, the housing officer who meets evicted families — these people carry operational knowledge that no policy document captures. And yet the design of most reform processes runs in exactly the opposite direction: experts at the top define the problem, draft the solution, and then hand it down to be implemented by people who were never asked. I have watched good policies fail because of this. I have watched mediocre policies succeed because someone, somewhere in the middle of the system, quietly adapted them to fit the actual situation on the ground.</p><div class="post-divider"></div><p>None of this is pessimistic, though I know it can read that way. The point is not that government cannot change — it can, and it has, in ways that genuinely matter. Korea's expansion of public health coverage, its digital services infrastructure, its shift toward more participatory local governance: these are real achievements, built by real people doing difficult work over long periods of time.</p><p>The point is that change in government is slower, messier, and more dependent on unglamorous work than the reform industry tends to acknowledge. The breakthroughs rarely happen at the announcement. They happen later, quietly, when someone in the system figures out how to make the idea actually work — and when enough political will exists to let them.</p><p>That is what I try to teach. Not cynicism, and not naive optimism. Something more like patient attention: the belief that watching how institutions actually function, over time and up close, is the only way to understand how to make them better.</p>`,
+        imageUrl: '', imageCaption: '', videoUrl: ''
+      },
+      {
+        id: 'post-default-2',
+        date: 'April 15, 2026',
+        title: 'What Seoul\'s Digital Government Success Really Tells Us',
+        body: `<p>Korea is often held up as a model of digital government — ranked first by the UN three years running. But I think we sometimes mistake the outcome for the lesson.</p><p>The infrastructure matters, yes. But what actually drove the transformation was something harder to export: a public that demanded it, a bureaucracy willing to be measured, and a political will to treat digital access as a right rather than a convenience. Technology was the vehicle, not the destination.</p><p>When other countries ask "how did Korea do it?", I want to answer: slowly, imperfectly, and with a lot of public pressure. That's the real story.</p>`,
+        imageUrl: 'https://picsum.photos/seed/digital-gov/800/420', imageCaption: 'Digital government', videoUrl: ''
+      },
+      {
+        id: 'post-default-3',
+        date: 'April 8, 2026',
+        title: 'The Gap Between Policy and People',
+        body: `<p>I've been thinking lately about the distance between a policy document and the person it's meant to serve. That gap — between legislative intent and lived experience — is where most of public administration actually happens. It's also where it most often fails.</p><p>A law can be well-designed and still land badly. Implementation is not a technicality. It's the whole point. And yet it remains the least glamorous part of the work — which is precisely why it gets neglected.</p><div class="post-divider"></div><p>This is what I keep trying to tell my students: the exciting part isn't writing the policy. It's making it real for the person at the counter who doesn't speak the right language, fill out the right form, or know the right office to walk into.</p>`,
+        imageUrl: '', imageCaption: '', videoUrl: ''
+      },
+      {
+        id: 'post-default-4',
+        date: 'March 30, 2026',
+        title: 'A Talk Worth Watching',
+        body: `<p>Sharing this lecture on participatory democracy that I came across recently. The framing around citizen assemblies and their limitations resonates with much of what I've been writing about deliberative governance.</p><p>Worth an hour of your time — especially the section starting around 22 minutes on why representation and participation are not the same thing.</p>`,
+        imageUrl: '', imageCaption: '', videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
+      },
+      {
+        id: 'post-default-5',
+        date: 'March 20, 2026',
+        title: '',
+        body: `<p>Finished teaching the spring semester's first seminar on institutional reform today. The students asked better questions than I had answers for — which is exactly how it should be. Grateful for a room full of people who still believe government can work better.</p>`,
+        imageUrl: '', imageCaption: '', videoUrl: ''
+      },
+    ];
+
+    // ── DEFAULT PUBLICATIONS ──
+    const DEFAULT_PUBLICATIONS = [
+      { id: 'pub-default-1', year: 2024, title: 'Institutional Trust and Bureaucratic Legitimacy in Post-Reform Korea', viewLink: '#', pdfLink: '#' },
+      { id: 'pub-default-2', year: 2024, title: 'Citizen Participation in Digital Public Services: Evidence from Municipal e-Government Platforms', viewLink: '#', pdfLink: '#' },
+      { id: 'pub-default-3', year: 2023, title: 'Bureaucratic Autonomy and Policy Discretion in Korean Local Government', viewLink: '#', pdfLink: '#' },
+      { id: 'pub-default-4', year: 2023, title: 'Welfare State Retrenchment and Administrative Capacity: A Comparative Study of East Asian Democracies', viewLink: '#', pdfLink: '#' },
+      { id: 'pub-default-5', year: 2022, title: 'Digital Transformation of Public Services: Evidence from Local Government', viewLink: '#', pdfLink: '#' },
+      { id: 'pub-default-6', year: 2022, title: 'Accountability Mechanisms and Public Trust: A Longitudinal Analysis of Korean Administrative Reform', viewLink: '#', pdfLink: '#' },
+      { id: 'pub-default-7', year: 2021, title: "Deliberative Governance and Policy Legitimacy: Lessons from Korea's Participatory Budgeting Experiment", viewLink: '#', pdfLink: '#' },
+    ];
+
+    // ── STATE ──
+    let currentTab = 'blog';
+    let editingPostId = null;
+    let editingPubId = null;
+
+    // ── UTILS ──
+    function esc(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function genId() {
+      return 'id-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
+    }
+
+    function getEmbedUrl(url) {
+      if (!url) return '';
+      const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s?]+)/);
+      return m ? 'https://www.youtube.com/embed/' + m[1] : url;
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    // ── AUTH ──
+    function checkAuth() {
+      return sessionStorage.getItem(KEYS.auth) === 'true';
+    }
+
+    function submitLogin() {
+      const pw = document.getElementById('passwordInput').value;
+      if (pw === ADMIN_PASSWORD) {
+        sessionStorage.setItem(KEYS.auth, 'true');
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        initDefaults();
+        renderSidebar();
+      } else {
+        document.getElementById('loginError').style.display = 'block';
+        document.getElementById('passwordInput').value = '';
+        document.getElementById('passwordInput').focus();
+      }
+    }
+
+    function logout() {
+      sessionStorage.removeItem(KEYS.auth);
+      location.reload();
+    }
+
+    // ── DATA ──
+    function loadPosts() {
+      const raw = localStorage.getItem(KEYS.posts);
+      return raw ? JSON.parse(raw) : [];
+    }
+
+    function savePosts(posts) {
+      localStorage.setItem(KEYS.posts, JSON.stringify(posts));
+    }
+
+    function loadPublications() {
+      const raw = localStorage.getItem(KEYS.publications);
+      return raw ? JSON.parse(raw) : [];
+    }
+
+    function savePublications(pubs) {
+      localStorage.setItem(KEYS.publications, JSON.stringify(pubs));
+    }
+
+    function initDefaults() {
+      if (!localStorage.getItem(KEYS.initialized)) {
+        savePosts(DEFAULT_POSTS);
+        savePublications(DEFAULT_PUBLICATIONS);
+        localStorage.setItem(KEYS.initialized, 'true');
+      }
+    }
+
+    // ── RENDER SIDEBAR ──
+    function renderSidebar() {
+      const posts = loadPosts();
+      const pubs  = loadPublications();
+
+      document.getElementById('blogCount').textContent = posts.length;
+      document.getElementById('pubCount').textContent  = pubs.length;
+
+      // Blog list
+      const blogList = document.getElementById('blogList');
+      blogList.innerHTML = posts.map(p => `
+        <div class="list-item ${editingPostId === p.id ? 'active' : ''}" onclick="editBlogPost('${esc(p.id)}')">
+          <div class="list-item-info">
+            <div class="list-item-title">${esc(p.title || '(untitled)')}</div>
+            <div class="list-item-meta">${esc(p.date)}</div>
+          </div>
+          <button class="list-item-del" title="Delete" onclick="event.stopPropagation(); quickDeletePost('${esc(p.id)}')">×</button>
+        </div>
+      `).join('') || '<div style="padding:1rem 1.5rem;font-size:0.82rem;color:var(--muted);">No posts yet.</div>';
+
+      // Pub list
+      const pubList = document.getElementById('pubList');
+      pubList.innerHTML = pubs.map(p => `
+        <div class="list-item ${editingPubId === p.id ? 'active' : ''}" onclick="editPublication('${esc(p.id)}')">
+          <div class="list-item-info">
+            <div class="list-item-title">${esc(p.title)}</div>
+            <div class="list-item-meta">${esc(p.year)}</div>
+          </div>
+          <button class="list-item-del" title="Delete" onclick="event.stopPropagation(); quickDeletePub('${esc(p.id)}')">×</button>
+        </div>
+      `).join('') || '<div style="padding:1rem 1.5rem;font-size:0.82rem;color:var(--muted);">No publications yet.</div>';
+    }
+
+    // ── TAB SWITCHING ──
+    function switchTab(tab) {
+      currentTab = tab;
+      document.getElementById('tabBlog').classList.toggle('active', tab === 'blog');
+      document.getElementById('tabPub').classList.toggle('active', tab === 'pub');
+      document.getElementById('blogSection').style.display = tab === 'blog' ? 'block' : 'none';
+      document.getElementById('pubSection').style.display  = tab === 'pub'  ? 'block' : 'none';
+      showEmpty();
+    }
+
+    function showEmpty() {
+      document.getElementById('editorEmpty').style.display  = 'flex';
+      document.getElementById('blogEditor').style.display   = 'none';
+      document.getElementById('pubEditor').style.display    = 'none';
+      editingPostId = null;
+      editingPubId  = null;
+      renderSidebar();
+    }
+
+    function cancelEdit() { showEmpty(); }
+
+    // ── BLOG POST EDITING ──
+    function newBlogPost() {
+      editingPostId = null;
+      editingPubId  = null;
+      document.getElementById('editorEmpty').style.display = 'none';
+      document.getElementById('pubEditor').style.display   = 'none';
+      document.getElementById('blogEditor').style.display  = 'block';
+      document.getElementById('blogEditorTitle').textContent = 'New Post';
+      document.getElementById('deleteBlogBtn').style.display = 'none';
+
+      document.getElementById('postDate').value        = '';
+      document.getElementById('postTitle').value       = '';
+      document.getElementById('postBody').innerHTML    = '<p><br></p>';
+      document.getElementById('postImageUrl').value    = '';
+      document.getElementById('postImageCaption').value = '';
+      document.getElementById('postVideoUrl').value    = '';
+      document.getElementById('postBody').focus();
+      renderSidebar();
+    }
+
+    function editBlogPost(id) {
+      const posts = loadPosts();
+      const post = posts.find(p => p.id === id);
+      if (!post) return;
+
+      editingPostId = id;
+      editingPubId  = null;
+
+      document.getElementById('editorEmpty').style.display = 'none';
+      document.getElementById('pubEditor').style.display   = 'none';
+      document.getElementById('blogEditor').style.display  = 'block';
+      document.getElementById('blogEditorTitle').textContent = 'Edit Post';
+      document.getElementById('deleteBlogBtn').style.display = 'inline-flex';
+
+      document.getElementById('postDate').value         = post.date || '';
+      document.getElementById('postTitle').value        = post.title || '';
+      document.getElementById('postBody').innerHTML     = post.body || '<p><br></p>';
+      document.getElementById('postImageUrl').value     = post.imageUrl || '';
+      document.getElementById('postImageCaption').value = post.imageCaption || '';
+      document.getElementById('postVideoUrl').value     = post.videoUrl || '';
+
+      renderSidebar();
+    }
+
+    function saveBlogPost() {
+      const date       = document.getElementById('postDate').value.trim();
+      const title      = document.getElementById('postTitle').value.trim();
+      const body       = document.getElementById('postBody').innerHTML;
+      const imageUrl   = document.getElementById('postImageUrl').value.trim();
+      const imageCap   = document.getElementById('postImageCaption').value.trim();
+      const videoUrl   = document.getElementById('postVideoUrl').value.trim();
+
+      if (!date) { alert('Please enter a date.'); return; }
+
+      const posts = loadPosts();
+
+      if (editingPostId) {
+        const idx = posts.findIndex(p => p.id === editingPostId);
+        if (idx >= 0) posts[idx] = { id: editingPostId, date, title, body, imageUrl, imageCaption: imageCap, videoUrl };
+      } else {
+        posts.unshift({ id: genId(), date, title, body, imageUrl, imageCaption: imageCap, videoUrl });
+        editingPostId = posts[0].id;
+      }
+
+      savePosts(posts);
+      renderSidebar();
+      showToast('Post saved.');
+      document.getElementById('deleteBlogBtn').style.display = 'inline-flex';
+      document.getElementById('blogEditorTitle').textContent = 'Edit Post';
+    }
+
+    function confirmDeletePost() {
+      openConfirm('Delete Post?', 'This will permanently delete the post.', deleteCurrentPost);
+    }
+
+    function deleteCurrentPost() {
+      if (!editingPostId) return;
+      quickDeletePost(editingPostId);
+    }
+
+    function quickDeletePost(id) {
+      const posts = loadPosts().filter(p => p.id !== id);
+      savePosts(posts);
+      showToast('Post deleted.');
+      showEmpty();
+    }
+
+    // ── PUBLICATION EDITING ──
+    function newPublication() {
+      editingPubId  = null;
+      editingPostId = null;
+      document.getElementById('editorEmpty').style.display = 'none';
+      document.getElementById('blogEditor').style.display  = 'none';
+      document.getElementById('pubEditor').style.display   = 'block';
+      document.getElementById('pubEditorTitle').textContent = 'New Publication';
+      document.getElementById('deletePubBtn').style.display = 'none';
+
+      document.getElementById('pubYear').value     = new Date().getFullYear();
+      document.getElementById('pubTitle').value    = '';
+      document.getElementById('pubViewLink').value = '';
+      document.getElementById('pubPdfLink').value  = '';
+      document.getElementById('pubTitle').focus();
+      renderSidebar();
+    }
+
+    function editPublication(id) {
+      const pubs = loadPublications();
+      const pub = pubs.find(p => p.id === id);
+      if (!pub) return;
+
+      editingPubId  = id;
+      editingPostId = null;
+
+      document.getElementById('editorEmpty').style.display = 'none';
+      document.getElementById('blogEditor').style.display  = 'none';
+      document.getElementById('pubEditor').style.display   = 'block';
+      document.getElementById('pubEditorTitle').textContent = 'Edit Publication';
+      document.getElementById('deletePubBtn').style.display = 'inline-flex';
+
+      document.getElementById('pubYear').value     = pub.year || '';
+      document.getElementById('pubTitle').value    = pub.title || '';
+      document.getElementById('pubViewLink').value = pub.viewLink || '';
+      document.getElementById('pubPdfLink').value  = pub.pdfLink || '';
+
+      renderSidebar();
+    }
+
+    function savePublication() {
+      const year      = parseInt(document.getElementById('pubYear').value);
+      const title     = document.getElementById('pubTitle').value.trim();
+      const viewLink  = document.getElementById('pubViewLink').value.trim();
+      const pdfLink   = document.getElementById('pubPdfLink').value.trim();
+
+      if (!title) { alert('Please enter a title.'); return; }
+      if (!year)  { alert('Please enter a year.');  return; }
+
+      const pubs = loadPublications();
+
+      if (editingPubId) {
+        const idx = pubs.findIndex(p => p.id === editingPubId);
+        if (idx >= 0) pubs[idx] = { id: editingPubId, year, title, viewLink, pdfLink };
+      } else {
+        pubs.push({ id: genId(), year, title, viewLink, pdfLink });
+        editingPubId = pubs[pubs.length - 1].id;
+      }
+
+      // Sort by year descending
+      pubs.sort((a, b) => b.year - a.year);
+      savePublications(pubs);
+      renderSidebar();
+      showToast('Publication saved.');
+      document.getElementById('deletePubBtn').style.display = 'inline-flex';
+      document.getElementById('pubEditorTitle').textContent = 'Edit Publication';
+    }
+
+    function confirmDeletePub() {
+      openConfirm('Delete Publication?', 'This will permanently delete the publication.', deleteCurrentPub);
+    }
+
+    function deleteCurrentPub() {
+      if (!editingPubId) return;
+      quickDeletePub(editingPubId);
+    }
+
+    function quickDeletePub(id) {
+      const pubs = loadPublications().filter(p => p.id !== id);
+      savePublications(pubs);
+      showToast('Publication deleted.');
+      showEmpty();
+    }
+
+    // ── EDITOR UTILS ──
+    function insertDivider() {
+      document.getElementById('postBody').focus();
+      document.execCommand('insertHTML', false, '<div class="post-divider"></div><p><br></p>');
+    }
+
+    // ── CONFIRM DIALOG ──
+    let confirmCallback = null;
+
+    function openConfirm(title, text, callback) {
+      document.getElementById('confirmTitle').textContent = title;
+      document.getElementById('confirmText').textContent  = text;
+      confirmCallback = callback;
+      document.getElementById('confirmOverlay').classList.add('show');
+      document.getElementById('confirmOkBtn').onclick = () => {
+        closeConfirm();
+        if (confirmCallback) confirmCallback();
+      };
+    }
+
+    function closeConfirm() {
+      document.getElementById('confirmOverlay').classList.remove('show');
+      confirmCallback = null;
+    }
+
+    // ── INIT ──
+    if (checkAuth()) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      initDefaults();
+      renderSidebar();
+    }
+
+    document.getElementById('passwordInput').focus();
+  </script>
+</body>
+</html>

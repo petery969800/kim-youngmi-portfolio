@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Kim Youngmi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&family=Noto+Sans+KR:wght@300;400&family=Noto+Serif+KR:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #FAF6EE;
+      --navy2:  #EDE5D0;
+      --dark:   #28190E;
+      --ivory:  #28190E;
+      --ivory2: #5A4530;
+      --gold:   #875A12;
+      --gold2:  #6A4610;
+      --muted:  #6B5A42;
+      --gutter: clamp(2rem, 7vw, 7rem);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--navy);
+      color: var(--ivory);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    html[lang="ko"] body { font-family: 'Noto Sans KR', sans-serif; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.6rem var(--gutter);
+      background: rgba(250,246,238,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(140,94,20,0.12);
+    }
+
+    .nav-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem; font-weight: 400; letter-spacing: 0.12em;
+      color: var(--ivory); text-decoration: none;
+    }
+
+    .nav-right { display: flex; align-items: center; gap: 2.5rem; }
+    .nav-links { display: flex; gap: 2.8rem; list-style: none; }
+
+    .nav-links a {
+      font-size: 0.9rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--ivory2); text-decoration: none;
+      transition: color 0.3s; position: relative;
+    }
+
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -3px; left: 0;
+      width: 0; height: 1px; background: var(--gold); transition: width 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a.active { color: var(--gold); }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+    .lang-dropdown { position: relative; }
+
+    .lang-selected {
+      display: flex; align-items: center; gap: 0.35rem;
+      background: none; border: 1px solid rgba(140,94,20,0.25); border-radius: 3px;
+      font-family: 'Inter', sans-serif; font-size: 0.8125rem; letter-spacing: 0.15em;
+      color: var(--ivory2); cursor: pointer; padding: 0.3rem 0.65rem;
+      transition: border-color 0.3s, color 0.3s; min-height: 32px; white-space: nowrap;
+    }
+
+    .lang-selected:hover { border-color: var(--gold); color: var(--gold); }
+    .lang-selected svg { transition: transform 0.25s; }
+    .lang-dropdown.open .lang-selected svg { transform: rotate(180deg); }
+
+    .lang-menu {
+      position: absolute; top: calc(100% + 0.5rem); left: 0;
+      background: #FAF6EE; border: 1px solid rgba(140,94,20,0.25);
+      box-shadow: 0 4px 16px rgba(40,25,14,0.10); border-radius: 3px;
+      overflow: hidden; min-width: 100%;
+      opacity: 0; pointer-events: none; transform: translateY(-6px);
+      transition: opacity 0.2s, transform 0.2s; z-index: 200;
+    }
+
+    .lang-dropdown.open .lang-menu { opacity: 1; pointer-events: all; transform: translateY(0); }
+
+    .lang-option {
+      display: block; width: 100%; padding: 0.6rem 0.85rem;
+      background: none; border: none;
+      font-family: 'Inter', sans-serif; font-size: 0.8125rem; letter-spacing: 0.12em;
+      color: var(--muted); cursor: pointer; text-align: left;
+      transition: color 0.2s, background 0.2s; white-space: nowrap;
+    }
+
+    .lang-option:hover { background: rgba(140,94,20,0.06); color: var(--ivory); }
+    .lang-option.active { color: var(--gold); }
+
+    .nav-toggle {
+      display: none; flex-direction: column; justify-content: center;
+      gap: 5px; background: none; border: none; cursor: pointer;
+      padding: 8px; z-index: 200; min-width: 44px; min-height: 44px; align-items: center;
+    }
+
+    .nav-toggle span {
+      display: block; width: 22px; height: 1.5px; background: var(--ivory);
+      transition: transform 0.35s ease, opacity 0.35s ease; transform-origin: center;
+    }
+
+    .nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .nav-overlay {
+      position: fixed; inset: 0; background: #28190E; z-index: 150;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 2.5rem;
+      opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+    }
+
+    .nav-overlay.open { opacity: 1; pointer-events: all; }
+
+    .nav-overlay a {
+      font-family: 'Cormorant Garamond', serif; font-size: 2.8rem;
+      font-weight: 300; color: #F4EDD8; text-decoration: none;
+      letter-spacing: 0.06em; transition: color 0.3s;
+    }
+
+    .nav-overlay a:hover { color: #C4840A; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 58vh;
+      background: #141414;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem var(--gutter) 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-watermark {
+      position: absolute;
+      bottom: -0.12em;
+      right: -0.04em;
+      font-family: 'Noto Serif KR', serif;
+      font-size: clamp(14rem, 30vw, 28rem);
+      font-weight: 300;
+      color: rgba(250,246,238,0.04);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.8125rem; letter-spacing: 0.28em; text-transform: uppercase;
+      color: rgba(196,132,10,0.85); margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 0.75rem;
+      opacity: 0; animation: fadeUp 1s ease forwards 0.1s;
+    }
+
+    .hero-eyebrow::before {
+      content: ''; display: block; width: 2rem; height: 1px; background: rgba(196,132,10,0.85);
+    }
+
+    .hero-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4.5rem, 9.5vw, 9rem);
+      font-weight: 300;
+      line-height: 0.9;
+      color: #F4EDD8;
+      letter-spacing: -0.025em;
+      opacity: 0;
+      animation: fadeUp 1.1s ease forwards 0.2s;
+    }
+
+    .hero-name span { font-style: italic; color: rgba(244,237,216,0.6); }
+    html[lang="ko"] .hero-name { font-family: 'Noto Serif KR', serif; letter-spacing: -0.01em; }
+
+    .hero-rule {
+      width: 3rem; height: 1px; background: rgba(196,132,10,0.5);
+      margin: 2.25rem 0;
+      opacity: 0; animation: fadeUp 1.1s ease forwards 0.35s;
+    }
+
+    .hero-meta {
+      font-size: 0.9375rem; color: rgba(244,237,216,0.5); line-height: 1.85;
+      opacity: 0; animation: fadeUp 1.1s ease forwards 0.45s;
+    }
+
+    /* ── SECTION SHARED ── */
+    .about-section {
+      padding: 8rem var(--gutter);
+      border-top: 1px solid rgba(140,94,20,0.10);
+      position: relative;
+    }
+
+    .section-header { margin-bottom: 4.5rem; }
+
+    .section-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(6rem, 14vw, 12rem);
+      font-weight: 300;
+      color: rgba(135,90,18,0.07);
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      user-select: none;
+    }
+
+    .section-eyebrow {
+      font-size: 0.8125rem; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--gold); margin-top: -0.75rem;
+    }
+
+    /* ── BIO ── */
+    .bio-layout {
+      display: grid;
+      grid-template-columns: min(400px, 40%) 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .about-photo {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      object-position: 78% top;
+      display: block;
+    }
+
+    .bio-identity {
+      margin-bottom: 2.5rem;
+      padding-bottom: 2.5rem;
+      border-bottom: 1px solid rgba(140,94,20,0.12);
+    }
+
+    .bio-identity-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 2.6vw, 2.5rem);
+      font-weight: 300; line-height: 1.1;
+      color: var(--ivory); margin-bottom: 0.75rem;
+    }
+
+    .bio-identity-name span { font-style: italic; color: var(--ivory2); }
+    html[lang="ko"] .bio-identity-name { font-family: 'Noto Serif KR', serif; }
+
+    .bio-identity-title {
+      font-size: 0.8125rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 0.35rem;
+    }
+
+    .bio-identity-affil { font-size: 0.9375rem; color: var(--muted); line-height: 1.8; }
+
+    .bio-text p {
+      font-size: 1.05rem; color: var(--ivory2);
+      line-height: 1.9; max-width: 64ch; margin-bottom: 1.6rem;
+    }
+
+    .bio-text p:last-child { margin-bottom: 0; }
+
+    /* ── QUOTE BAND ── */
+    .quote-band {
+      background: var(--dark);
+      padding: 8rem var(--gutter);
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+    }
+
+    .quote-rule {
+      width: 2rem; height: 1px;
+      background: rgba(196,132,10,0.45);
+      margin-bottom: 3.5rem;
+    }
+
+    .quote-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 3vw, 2.6rem);
+      font-style: italic; font-weight: 300;
+      color: #F4EDD8;
+      max-width: 72ch; line-height: 1.65; letter-spacing: 0.01em;
+    }
+
+    html[lang="ko"] .quote-text { font-family: 'Noto Serif KR', serif; }
+
+    .quote-attr {
+      margin-top: 2.5rem;
+      font-size: 0.8125rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(196,132,10,0.65);
+    }
+
+    /* ── EDUCATION / AWARDS / SERVICE rows ── */
+    .row-list { display: flex; flex-direction: column; }
+
+    .row-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 2rem;
+      padding: 2rem 0;
+      border-bottom: 1px solid rgba(140,94,20,0.09);
+    }
+
+    .row-item:first-child { border-top: 1px solid rgba(140,94,20,0.09); }
+
+    .row-left { display: flex; align-items: baseline; gap: 2.5rem; }
+
+    .row-year {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem; color: var(--gold); opacity: 0.5;
+      min-width: 4rem; flex-shrink: 0;
+    }
+
+    .row-primary { font-size: 0.9375rem; color: var(--ivory); }
+    .row-secondary { font-size: 0.875rem; color: var(--muted); margin-top: 0.2rem; }
+    .row-note { font-size: 0.875rem; color: var(--muted); flex-shrink: 0; }
+
+    /* ── RESEARCH INTERESTS ── */
+    .interests-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(140,94,20,0.12);
+    }
+
+    .interest-card {
+      background: var(--navy);
+      padding: 4rem 3rem 5rem;
+      display: flex; flex-direction: column;
+      border-top: 2px solid transparent;
+      transition: border-color 0.35s ease, background 0.35s ease;
+      cursor: default;
+    }
+
+    .interest-card:hover {
+      border-top-color: var(--gold);
+      background: var(--navy2);
+    }
+
+    .interest-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4.5rem, 8vw, 7.5rem);
+      font-weight: 300; line-height: 1;
+      color: rgba(135,90,18,0.1);
+      margin-bottom: 2.5rem;
+      letter-spacing: -0.04em;
+      transition: color 0.35s ease;
+    }
+
+    .interest-card:hover .interest-num { color: rgba(135,90,18,0.35); }
+
+    .interest-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; font-weight: 400;
+      color: var(--ivory); line-height: 1.25;
+      margin-bottom: 1.25rem;
+      transition: color 0.35s ease;
+    }
+
+    html[lang="ko"] .interest-name { font-family: 'Noto Serif KR', serif; }
+    .interest-card:hover .interest-name { color: var(--gold2); }
+
+    .interest-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.8; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 3rem var(--gutter);
+      border-top: 1px solid rgba(140,94,20,0.12);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .footer-name { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--ivory2); }
+    .footer-copy { font-size: 0.9rem; color: var(--muted); letter-spacing: 0.08em; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.75s ease, transform 0.75s ease;
+    }
+
+    .reveal.visible { opacity: 1; transform: none; }
+
+    html[lang="ko"] .nav-brand,
+    html[lang="ko"] .footer-name { font-family: 'Noto Serif KR', serif; }
+
+    /* ── TABLET ── */
+    @media (max-width: 1024px) {
+      .bio-layout { grid-template-columns: min(320px, 42%) 1fr; gap: 3.5rem; }
+      .interests-grid { grid-template-columns: 1fr; }
+      .interest-card { padding: 3rem 2.5rem 4rem; }
+      .about-section { padding: 6rem var(--gutter); }
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      :root { --gutter: 1.5rem; }
+      nav { padding: 1.1rem var(--gutter); }
+      .nav-links { display: none; }
+      .nav-toggle { display: flex; }
+
+      #hero { padding: 6rem var(--gutter) 3rem; min-height: 50vh; }
+      .hero-watermark { font-size: 45vw; }
+
+      .bio-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+
+      .row-item { flex-direction: column; gap: 0.2rem; }
+      .row-left { flex-direction: column; gap: 0.15rem; }
+      .row-note { display: none; }
+
+      .about-section { padding: 5rem var(--gutter); }
+      .quote-band { padding: 6rem var(--gutter); }
+
+      footer { flex-direction: column; gap: 0.75rem; text-align: center; padding: 2.5rem var(--gutter); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-brand" href="index.html" data-i18n="nav.brand">KIM YOUNGMI</a>
+    <div class="nav-right">
+      <div class="lang-dropdown" id="langDropdown">
+        <button class="lang-selected" id="langToggleBtn">
+          <span id="currentLang">EN</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </button>
+        <div class="lang-menu">
+          <button class="lang-option active" data-lang="en">EN — English</button>
+          <button class="lang-option" data-lang="ko">KR — 한국어</button>
+        </div>
+      </div>
+      <ul class="nav-links">
+        <li><a href="publications.html" data-i18n="nav.publications">Publications</a></li>
+        <li><a href="blog.html" data-i18n="nav.blog">Blog</a></li>
+        <li><a href="about.html" class="active" data-i18n="nav.about">About</a></li>
+        <li><a href="admin.html">Login</a></li>
+      </ul>
+    </div>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="nav-overlay">
+    <a href="publications.html" data-i18n="nav.publications" onclick="closeNav()">Publications</a>
+    <a href="blog.html" data-i18n="nav.blog" onclick="closeNav()">Blog</a>
+    <a href="about.html" data-i18n="nav.about" onclick="closeNav()">About</a>
+    <a href="admin.html" onclick="closeNav()">Login</a>
+  </div>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-watermark" aria-hidden="true" data-i18n="hero.watermark">김영미</div>
+    <p class="hero-eyebrow" data-i18n="hero.eyebrow">About</p>
+    <h1 class="hero-name" data-i18n-html="hero.name">Professor Kim <span>Youngmi</span></h1>
+    <div class="hero-rule"></div>
+    <p class="hero-meta" data-i18n="hero.meta">Professor of Public Administration · Department of Public Administration · Sangmyung University · Seoul</p>
+  </section>
+
+  <!-- BIOGRAPHY -->
+  <div class="about-section">
+    <div class="section-header reveal">
+      <p class="section-num" aria-hidden="true">01</p>
+      <p class="section-eyebrow" data-i18n="bio.label">Biography</p>
+    </div>
+    <div class="bio-layout">
+      <img class="about-photo reveal" src="magazine.jpg" alt="Professor Kim Youngmi" />
+      <div class="bio-text">
+        <div class="bio-identity reveal">
+          <h2 class="bio-identity-name" data-i18n-html="bio.name">Professor Kim <span>Youngmi</span></h2>
+          <p class="bio-identity-title" data-i18n="bio.title">Professor of Public Administration</p>
+          <p class="bio-identity-affil" data-i18n="bio.affil">Department of Public Administration · Sangmyung University · Seoul</p>
+        </div>
+        <p class="reveal" data-i18n="bio.p1">Placeholder — Professor Kim Youngmi is a scholar of public administration and governance whose research examines the institutional foundations of the Korean state, the dynamics of policy reform, and the evolving relationship between citizens and public institutions in contemporary East Asia.</p>
+        <p class="reveal" data-i18n="bio.p2">Placeholder — Over more than three decades of scholarship, she has contributed to debates on bureaucratic legitimacy, participatory governance, and the conditions under which institutional trust is built or eroded. Her work draws on both qualitative and quantitative methods, and is informed by close engagement with practitioners in government and civil society.</p>
+        <p class="reveal" data-i18n="bio.p3">Placeholder — She joined the faculty of Sangmyung University after completing her doctoral studies, and has since taught and advised generations of students who have gone on to careers in public service, policy research, and academia.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDUCATION -->
+  <div class="about-section">
+    <div class="section-header reveal">
+      <p class="section-num" aria-hidden="true">02</p>
+      <p class="section-eyebrow" data-i18n="edu.label">Education</p>
+    </div>
+    <div class="row-list">
+      <div class="row-item reveal">
+        <div class="row-left">
+          <p class="row-year" data-i18n="edu.phd.year">0000</p>
+          <div>
+            <p class="row-primary" data-i18n="edu.phd.degree">Doctor of Philosophy</p>
+            <p class="row-secondary" data-i18n="edu.phd.field">Public Administration</p>
+          </div>
+        </div>
+        <p class="row-note" data-i18n="edu.phd.institution">Placeholder University, Seoul</p>
+      </div>
+      <div class="row-item reveal">
+        <div class="row-left">
+          <p class="row-year" data-i18n="edu.ma.year">0000</p>
+          <div>
+            <p class="row-primary" data-i18n="edu.ma.degree">Master of Arts</p>
+            <p class="row-secondary" data-i18n="edu.ma.field">Public Administration</p>
+          </div>
+        </div>
+        <p class="row-note" data-i18n="edu.ma.institution">Placeholder University, Seoul</p>
+      </div>
+      <div class="row-item reveal">
+        <div class="row-left">
+          <p class="row-year" data-i18n="edu.bs.year">0000</p>
+          <div>
+            <p class="row-primary" data-i18n="edu.bs.degree">Bachelor of Science</p>
+            <p class="row-secondary" data-i18n="edu.bs.field">Public Administration</p>
+          </div>
+        </div>
+        <p class="row-note" data-i18n="edu.bs.institution">Placeholder University, Seoul</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESEARCH INTERESTS -->
+  <div class="about-section">
+    <div class="section-header reveal">
+      <p class="section-num" aria-hidden="true">03</p>
+      <p class="section-eyebrow" data-i18n="interests.label">Research Interests</p>
+    </div>
+    <div class="interests-grid">
+      <div class="interest-card reveal">
+        <div class="interest-num">01</div>
+        <p class="interest-name" data-i18n="int1.title">Public Governance &amp; Institutional Reform</p>
+        <p class="interest-desc" data-i18n="int1.desc">Placeholder — administrative restructuring, bureaucratic accountability, and state capacity in Korea and comparative East Asian contexts.</p>
+      </div>
+      <div class="interest-card reveal">
+        <div class="interest-num">02</div>
+        <p class="interest-name" data-i18n="int2.title">Policy Process &amp; Implementation</p>
+        <p class="interest-desc" data-i18n="int2.desc">Placeholder — policy design, agenda-setting, and the gap between legislative intent and on-the-ground outcomes in social and welfare policy.</p>
+      </div>
+      <div class="interest-card reveal">
+        <div class="interest-num">03</div>
+        <p class="interest-name" data-i18n="int3.title">Civic Participation &amp; Democratic Governance</p>
+        <p class="interest-desc" data-i18n="int3.desc">Placeholder — deliberative democracy, participatory budgeting, and civil society's role in shaping public administration.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AWARDS -->
+  <div class="about-section">
+    <div class="section-header reveal">
+      <p class="section-num" aria-hidden="true">04</p>
+      <p class="section-eyebrow" data-i18n="awards.label">Awards &amp; Recognition</p>
+    </div>
+    <div class="row-list">
+      <div class="row-item reveal">
+        <div class="row-left">
+          <p class="row-year" data-i18n="aw1.year">0000</p>
+          <div>
+            <p class="row-primary" data-i18n="aw1.name">Placeholder Award Name</p>
+            <p class="row-secondary" data-i18n="aw1.org">Awarding Organization</p>
+          </div>
+        </div>
+        <p class="row-note" data-i18n="aw1.note">Best Paper</p>
+      </div>
+      <div class="row-item reveal">
+        <div class="row-left">
+          <p class="row-year" data-i18n="aw2.year">0000</p>
+          <div>
+            <p class="row-primary" data-i18n="aw2.name">Placeholder Award Name</p>
+            <p class="row-secondary" data-i18n="aw2.org">Awarding Organization</p>
+          </div>
+        </div>
+        <p class="row-note" data-i18n="aw2.note">Excellence in Research</p>
+      </div>
+      <div class="row-item reveal">
+        <div class="row-left">
+          <p class="row-year" data-i18n="aw3.year">0000</p>
+          <div>
+            <p class="row-primary" data-i18n="aw3.name">Placeholder Award Name</p>
+            <p class="row-secondary" data-i18n="aw3.org">Awarding Organization</p>
+          </div>
+        </div>
+        <p class="row-note" data-i18n="aw3.note">Fellowship</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACADEMIC SERVICE -->
+  <div class="about-section">
+    <div class="section-header reveal">
+      <p class="section-num" aria-hidden="true">05</p>
+      <p class="section-eyebrow" data-i18n="service.label">Academic Service</p>
+    </div>
+    <div class="row-list">
+      <div class="row-item reveal">
+        <div class="row-left">
+          <p class="row-year" data-i18n="sv1.years">0000–</p>
+          <div>
+            <p class="row-primary" data-i18n="sv1.role">Editorial Board Member</p>
+            <p class="row-secondary" data-i18n="sv1.org">Placeholder Journal of Public Administration</p>
+          </div>
+        </div>
+      </div>
+      <div class="row-item reveal">
+        <div class="row-left">
+          <p class="row-year" data-i18n="sv2.years">0000–</p>
+          <div>
+            <p class="row-primary" data-i18n="sv2.role">Committee Member</p>
+            <p class="row-secondary" data-i18n="sv2.org">Korean Association for Public Administration</p>
+          </div>
+        </div>
+      </div>
+      <div class="row-item reveal">
+        <div class="row-left">
+          <p class="row-year" data-i18n="sv3.years">0000–0000</p>
+          <div>
+            <p class="row-primary" data-i18n="sv3.role">Peer Reviewer</p>
+            <p class="row-secondary" data-i18n="sv3.org">Placeholder International Review of Administrative Sciences</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-name" data-i18n="footer.name">Kim Youngmi</span>
+    <span class="footer-copy" data-i18n="footer.copy">Department of Public Administration &nbsp;·&nbsp; Sangmyung University &nbsp;·&nbsp; Seoul, Korea</span>
+  </footer>
+
+  <script>
+    const t = {
+      en: {
+        'nav.brand': 'KIM YOUNGMI', 'nav.publications': 'Publications', 'nav.blog': 'Blog', 'nav.about': 'About',
+        'hero.watermark': '김영미',
+        'hero.eyebrow': 'About',
+        'hero.name': 'Professor Kim <span>Youngmi</span>',
+        'hero.meta': 'Professor of Public Administration · Department of Public Administration · Sangmyung University · Seoul',
+        'bio.label': 'Biography',
+        'bio.name': 'Professor Kim <span>Youngmi</span>',
+        'bio.title': 'Professor of Public Administration',
+        'bio.affil': 'Department of Public Administration · Sangmyung University · Seoul',
+        'bio.p1': 'Placeholder — Professor Kim Youngmi is a scholar of public administration and governance whose research examines the institutional foundations of the Korean state, the dynamics of policy reform, and the evolving relationship between citizens and public institutions in contemporary East Asia.',
+        'bio.p2': 'Placeholder — Over more than three decades of scholarship, she has contributed to debates on bureaucratic legitimacy, participatory governance, and the conditions under which institutional trust is built or eroded. Her work draws on both qualitative and quantitative methods, and is informed by close engagement with practitioners in government and civil society.',
+        'bio.p3': 'Placeholder — She joined the faculty of Sangmyung University after completing her doctoral studies, and has since taught and advised generations of students who have gone on to careers in public service, policy research, and academia.',
+        'quote.text': '"Good governance is not a destination but a discipline: a continuous reckoning between power, accountability, and the public good."',
+        'quote.attr': 'Kim Youngmi — Research Philosophy',
+        'edu.label': 'Education',
+        'edu.phd.year': '0000', 'edu.phd.degree': 'Doctor of Philosophy', 'edu.phd.field': 'Public Administration', 'edu.phd.institution': 'Placeholder University, Seoul',
+        'edu.ma.year': '0000', 'edu.ma.degree': 'Master of Arts', 'edu.ma.field': 'Public Administration', 'edu.ma.institution': 'Placeholder University, Seoul',
+        'edu.bs.year': '0000', 'edu.bs.degree': 'Bachelor of Science', 'edu.bs.field': 'Public Administration', 'edu.bs.institution': 'Placeholder University, Seoul',
+        'interests.label': 'Research Interests',
+        'int1.title': 'Public Governance & Institutional Reform', 'int1.desc': 'Placeholder — administrative restructuring, bureaucratic accountability, and state capacity in Korea and comparative East Asian contexts.',
+        'int2.title': 'Policy Process & Implementation', 'int2.desc': 'Placeholder — policy design, agenda-setting, and the gap between legislative intent and on-the-ground outcomes in social and welfare policy.',
+        'int3.title': 'Civic Participation & Democratic Governance', 'int3.desc': "Placeholder — deliberative democracy, participatory budgeting, and civil society's role in shaping public administration.",
+        'awards.label': 'Awards & Recognition',
+        'aw1.year': '0000', 'aw1.name': 'Placeholder Award Name', 'aw1.org': 'Awarding Organization', 'aw1.note': 'Best Paper',
+        'aw2.year': '0000', 'aw2.name': 'Placeholder Award Name', 'aw2.org': 'Awarding Organization', 'aw2.note': 'Excellence in Research',
+        'aw3.year': '0000', 'aw3.name': 'Placeholder Award Name', 'aw3.org': 'Awarding Organization', 'aw3.note': 'Fellowship',
+        'service.label': 'Academic Service',
+        'sv1.years': '0000–', 'sv1.role': 'Editorial Board Member', 'sv1.org': 'Placeholder Journal of Public Administration',
+        'sv2.years': '0000–', 'sv2.role': 'Committee Member', 'sv2.org': 'Korean Association for Public Administration',
+        'sv3.years': '0000–0000', 'sv3.role': 'Peer Reviewer', 'sv3.org': 'Placeholder International Review of Administrative Sciences',
+        'footer.name': 'Kim Youngmi',
+        'footer.copy': 'Department of Public Administration\u00a0·\u00a0Sangmyung University\u00a0·\u00a0Seoul, Korea',
+      },
+      ko: {
+        'nav.brand': '김영미', 'nav.publications': '연구논문', 'nav.blog': '블로그', 'nav.about': '소개',
+        'hero.watermark': '김영미',
+        'hero.eyebrow': '소개',
+        'hero.name': '김영미 <span>교수</span>',
+        'hero.meta': '행정학과 교수 · 행정학과 · 상명대학교 · 서울',
+        'bio.label': '약력',
+        'bio.name': '김영미 <span>교수</span>',
+        'bio.title': '행정학과 교수',
+        'bio.affil': '행정학과 · 상명대학교 · 서울',
+        'bio.p1': '플레이스홀더 — 김영미 교수는 공공행정 및 거버넌스 분야의 학자로, 한국 국가의 제도적 기반, 정책 개혁의 동학, 그리고 현대 동아시아에서 시민과 공공기관 사이의 변화하는 관계를 연구합니다.',
+        'bio.p2': '플레이스홀더 — 30년 이상의 학문적 연구를 통해 관료적 정당성, 참여적 거버넌스, 제도적 신뢰가 형성되거나 약화되는 조건에 관한 논의에 기여해 왔습니다.',
+        'bio.p3': '플레이스홀더 — 박사 학위 취득 후 상명대학교 교수로 부임하여, 공직, 정책 연구, 학계에서 활약하는 수많은 학생들을 지도해 왔습니다.',
+        'quote.text': '"좋은 거버넌스는 목적지가 아니라 하나의 규율입니다. 권력, 책임, 그리고 공공의 선 사이에서 끊임없이 이루어지는 성찰의 과정입니다."',
+        'quote.attr': '김영미 — 연구 철학',
+        'edu.label': '학력',
+        'edu.phd.year': '0000', 'edu.phd.degree': '행정학 박사', 'edu.phd.field': '행정학', 'edu.phd.institution': '플레이스홀더 대학교, 서울',
+        'edu.ma.year': '0000', 'edu.ma.degree': '행정학 석사', 'edu.ma.field': '행정학', 'edu.ma.institution': '플레이스홀더 대학교, 서울',
+        'edu.bs.year': '0000', 'edu.bs.degree': '행정학 학사', 'edu.bs.field': '행정학', 'edu.bs.institution': '플레이스홀더 대학교, 서울',
+        'interests.label': '연구 관심 분야',
+        'int1.title': '공공 거버넌스 및 제도 개혁', 'int1.desc': '플레이스홀더 — 행정 구조조정, 관료적 책임, 한국 및 동아시아 비교 맥락에서의 국가 역량.',
+        'int2.title': '정책 과정 및 집행', 'int2.desc': '플레이스홀더 — 정책 설계, 의제 설정, 그리고 입법 의도와 사회·복지 정책의 현장 결과 사이의 간극.',
+        'int3.title': '시민 참여 및 민주적 거버넌스', 'int3.desc': '플레이스홀더 — 숙의 민주주의, 주민참여예산제, 그리고 공공행정 형성에서 시민사회의 역할.',
+        'awards.label': '수상 및 수훈',
+        'aw1.year': '0000', 'aw1.name': '플레이스홀더 수상명', 'aw1.org': '수여 기관', 'aw1.note': '우수 논문상',
+        'aw2.year': '0000', 'aw2.name': '플레이스홀더 수상명', 'aw2.org': '수여 기관', 'aw2.note': '연구 우수상',
+        'aw3.year': '0000', 'aw3.name': '플레이스홀더 수상명', 'aw3.org': '수여 기관', 'aw3.note': '펠로우십',
+        'service.label': '학술 활동',
+        'sv1.years': '0000–', 'sv1.role': '편집위원', 'sv1.org': '플레이스홀더 행정학보',
+        'sv2.years': '0000–', 'sv2.role': '위원회 위원', 'sv2.org': '한국행정학회',
+        'sv3.years': '0000–0000', 'sv3.role': '심사위원', 'sv3.org': '플레이스홀더 국제행정학보',
+        'footer.name': '김영미',
+        'footer.copy': '행정학과\u00a0·\u00a0상명대학교\u00a0·\u00a0서울, 대한민국',
+      }
+    };
+
+    function setLang(lang) {
+      document.documentElement.lang = lang;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (t[lang][key] !== undefined) el.textContent = t[lang][key];
+      });
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.dataset.i18nHtml;
+        if (t[lang][key] !== undefined) el.innerHTML = t[lang][key];
+      });
+      const currentLangEl = document.getElementById('currentLang');
+      if (currentLangEl) currentLangEl.textContent = lang.toUpperCase();
+      document.querySelectorAll('.lang-option').forEach(opt => {
+        opt.classList.toggle('active', opt.dataset.lang === lang);
+      });
+      localStorage.setItem('lang', lang);
+    }
+
+    const langDropdown = document.getElementById('langDropdown');
+    const langToggleBtn = document.getElementById('langToggleBtn');
+
+    langToggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      langDropdown.classList.toggle('open');
+    });
+
+    document.querySelectorAll('.lang-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        setLang(opt.dataset.lang);
+        langDropdown.classList.remove('open');
+      });
+    });
+
+    document.addEventListener('click', () => langDropdown.classList.remove('open'));
+
+    const saved = localStorage.getItem('lang');
+    if (saved && saved !== 'en') setLang(saved);
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 100);
+        }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    const toggle = document.querySelector('.nav-toggle');
+    const overlay = document.querySelector('.nav-overlay');
+    toggle.addEventListener('click', () => {
+      const isOpen = overlay.classList.toggle('open');
+      toggle.classList.toggle('open', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+    function closeNav() {
+      overlay.classList.remove('open');
+      toggle.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  </script>
+</body>
+</html>

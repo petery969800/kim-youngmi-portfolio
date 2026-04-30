@@ -321,7 +321,8 @@
       <ul class="nav-links">
         <li><a href="publications.html" class="active" data-i18n="nav.publications">Publications</a></li>
         <li><a href="blog.html" data-i18n="nav.blog">Blog</a></li>
-        <li><a href="#" data-i18n="nav.about">About</a></li>
+        <li><a href="about.html" data-i18n="nav.about">About</a></li>
+        <li><a href="admin.html">Login</a></li>
       </ul>
     </div>
     <button class="nav-toggle" aria-label="Toggle navigation">
@@ -332,7 +333,8 @@
   <div class="nav-overlay">
     <a href="publications.html" data-i18n="nav.publications" onclick="closeNav()">Publications</a>
     <a href="blog.html" data-i18n="nav.blog" onclick="closeNav()">Blog</a>
-    <a href="#" data-i18n="nav.about" onclick="closeNav()">About</a>
+    <a href="about.html" data-i18n="nav.about" onclick="closeNav()">About</a>
+    <a href="admin.html" onclick="closeNav()">Login</a>
   </div>
 
   <!-- HEADER -->
@@ -447,6 +449,43 @@
   </footer>
 
   <script>
+    // ── DYNAMIC CONTENT FROM ADMIN ──
+    (function() {
+      const stored = localStorage.getItem('kim_publications');
+      if (!stored) return;
+      const pubs = JSON.parse(stored);
+      if (!pubs || !pubs.length) return;
+
+      function esc(s) {
+        return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      }
+
+      // Group by year descending
+      const byYear = {};
+      pubs.forEach(p => { if (!byYear[p.year]) byYear[p.year] = []; byYear[p.year].push(p); });
+      const years = Object.keys(byYear).sort((a, b) => b - a);
+
+      let globalIdx = 1;
+      const html = years.map(year => {
+        const items = byYear[year].map(p => {
+          const idx = String(globalIdx++).padStart(2, '0');
+          return `<div class="pub-item">
+            <div class="pub-body">
+              <span class="pub-index">${idx}</span>
+              <p class="pub-title">${esc(p.title)}</p>
+            </div>
+            <div class="pub-links">
+              ${p.viewLink && p.viewLink !== '#' ? `<a class="pub-link" href="${esc(p.viewLink)}" target="_blank" rel="noopener">View ↗</a>` : ''}
+              ${p.pdfLink && p.pdfLink !== '#' ? `<a class="pub-link" href="${esc(p.pdfLink)}" download>PDF ↓</a>` : ''}
+            </div>
+          </div>`;
+        }).join('');
+        return `<div class="year-group"><p class="year-label">${esc(year)}</p><div class="year-papers">${items}</div></div>`;
+      }).join('');
+
+      document.querySelector('.pub-list').innerHTML = html;
+    })();
+
     const t = {
       en: {
         'nav.brand': 'KIM YOUNGMI', 'nav.publications': 'Publications', 'nav.blog': 'Blog', 'nav.about': 'About',

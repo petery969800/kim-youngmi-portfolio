@@ -459,7 +459,8 @@
       <ul class="nav-links">
         <li><a href="publications.html" data-i18n="nav.publications">Publications</a></li>
         <li><a href="blog.html" class="active" data-i18n="nav.blog">Blog</a></li>
-        <li><a href="#" data-i18n="nav.about">About</a></li>
+        <li><a href="about.html" data-i18n="nav.about">About</a></li>
+        <li><a href="admin.html">Login</a></li>
       </ul>
     </div>
     <button class="nav-toggle" aria-label="Toggle navigation">
@@ -468,9 +469,10 @@
   </nav>
 
   <div class="nav-overlay">
-    <a href="index.html#works" data-i18n="nav.publications" onclick="closeNav()">Publications</a>
+    <a href="publications.html" data-i18n="nav.publications" onclick="closeNav()">Publications</a>
     <a href="blog.html" data-i18n="nav.blog" onclick="closeNav()">Blog</a>
-    <a href="#" data-i18n="nav.about" onclick="closeNav()">About</a>
+    <a href="about.html" data-i18n="nav.about" onclick="closeNav()">About</a>
+    <a href="admin.html" onclick="closeNav()">Login</a>
   </div>
 
   <!-- BLOG HEADER -->
@@ -580,6 +582,42 @@
   </footer>
 
   <script>
+    // ── DYNAMIC CONTENT FROM ADMIN ──
+    (function() {
+      const stored = localStorage.getItem('kim_blog_posts');
+      if (!stored) return;
+      const posts = JSON.parse(stored);
+      if (!posts || !posts.length) return;
+
+      function esc(s) {
+        return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      }
+      function embedUrl(url) {
+        if (!url) return '';
+        const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s?]+)/);
+        return m ? 'https://www.youtube.com/embed/' + m[1] : url;
+      }
+
+      const feed = document.querySelector('.feed');
+      feed.innerHTML = posts.map(p => {
+        let media = '';
+        if (p.videoUrl) {
+          media = `<div class="post-video"><iframe src="${esc(embedUrl(p.videoUrl))}" title="Video" allowfullscreen></iframe></div>`;
+        } else if (p.imageUrl) {
+          media = `<figure class="post-image"><img src="${esc(p.imageUrl)}" alt="${esc(p.imageCaption)}"/>`;
+          if (p.imageCaption) media += `<figcaption>${esc(p.imageCaption)}</figcaption>`;
+          media += '</figure>';
+        }
+        return `<article class="post">
+          <div class="post-inner">
+            <div class="post-meta"><time class="post-date">${esc(p.date)}</time></div>
+            ${p.title ? `<h2>${esc(p.title)}</h2>` : ''}
+            <div class="post-body">${p.body || ''}</div>
+          </div>${media}
+        </article>`;
+      }).join('');
+    })();
+
     const t = {
       en: {
         'nav.brand': 'KIM YOUNGMI', 'nav.publications': 'Publications', 'nav.blog': 'Blog', 'nav.about': 'About',
