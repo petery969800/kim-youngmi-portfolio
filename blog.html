@@ -809,7 +809,7 @@
       document.querySelectorAll('.lang-option').forEach(opt => {
         opt.classList.toggle('active', opt.dataset.lang === lang);
       });
-      localStorage.setItem('lang', lang);
+      localStorage.setItem('lang_v2', lang);
     }
 
     const langDropdown = document.getElementById('langDropdown');
@@ -829,7 +829,7 @@
 
     document.addEventListener('click', () => langDropdown.classList.remove('open'));
 
-    setLang(localStorage.getItem('lang') || 'ko');
+    setLang(localStorage.getItem('lang_v2') || 'ko');
 
     // Hamburger
     const toggle = document.querySelector('.nav-toggle');
