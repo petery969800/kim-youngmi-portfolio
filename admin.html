@@ -628,15 +628,107 @@
       display: none;
     }
 
+    /* ── MOBILE BACK BUTTON (hidden on desktop) ── */
+    .mobile-back-btn {
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      background: none;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      width: 100%;
+      transition: color 0.2s;
+    }
+    .mobile-back-btn:hover { color: var(--gold); }
+
+    /* ── ADMIN NAV MOBILE ── */
+    .admin-nav-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      min-width: 44px;
+      min-height: 44px;
+      align-items: center;
+    }
+    .admin-nav-toggle span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: var(--ivory);
+      transition: transform 0.3s, opacity 0.3s;
+      transform-origin: center;
+    }
+    .admin-nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .admin-nav-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .admin-nav-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .admin-nav-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #28190E;
+      z-index: 200;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+    }
+    .admin-nav-overlay.open { display: flex; }
+    .admin-nav-overlay a, .admin-nav-overlay button {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4rem;
+      font-weight: 300;
+      color: #F4EDD8;
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    .admin-nav-overlay a:hover, .admin-nav-overlay button:hover { color: #C4840A; }
+
     @media (max-width: 900px) {
       .admin-layout { grid-template-columns: 220px 1fr; }
       .editor-panel { padding: 1.5rem; }
     }
 
+    @media (max-width: 768px) {
+      .admin-nav-links { display: none; }
+      .admin-nav-toggle { display: flex; }
+    }
+
     @media (max-width: 680px) {
-      .admin-layout { grid-template-columns: 1fr; }
-      .sidebar { display: none; }
+      .admin-layout { grid-template-columns: 1fr; min-height: auto; }
+      .editor-panel { padding: 1.25rem; display: none; }
+      .mobile-back-btn { display: flex; }
       .form-row { grid-template-columns: 1fr; }
+      .media-section { padding: 1rem; }
+
+      /* show editor, hide sidebar when mobile-editing class present */
+      .mobile-editing .sidebar { display: none; }
+      .mobile-editing .editor-panel { display: block; }
+      /* default: show sidebar, hide editor */
+      .sidebar { display: flex; flex-direction: column; border-right: none; border-bottom: 1px solid var(--border); }
+    }
+
+    @media (max-width: 480px) {
+      .editor-section-title { font-size: 1.3rem; }
+      .form-actions { flex-direction: column; gap: 0.75rem; }
+      .form-actions-right { margin-left: 0; }
+      .btn-primary, .btn-ghost, .btn-danger { width: 100%; justify-content: center; }
     }
   </style>
 </head>
@@ -652,7 +744,18 @@
       <li><a href="admin.html" class="active">Login</a></li>
       <li><button class="signout" id="signoutBtn" onclick="logout()" style="display:none">Sign Out</button></li>
     </ul>
+    <button class="admin-nav-toggle" id="adminNavToggle" aria-label="Menu" onclick="toggleAdminNav()">
+      <span></span><span></span><span></span>
+    </button>
   </header>
+
+  <div class="admin-nav-overlay" id="adminNavOverlay">
+    <a href="publications.html" onclick="closeAdminNav()">Publications</a>
+    <a href="blog.html" onclick="closeAdminNav()">Blog</a>
+    <a href="about.html" onclick="closeAdminNav()">About</a>
+    <a href="admin.html" onclick="closeAdminNav()">Login</a>
+    <button id="signoutBtnMobile" onclick="logout()" style="display:none">Sign Out</button>
+  </div>
 
   <!-- LOGIN SCREEN -->
   <div id="loginScreen">
@@ -708,6 +811,7 @@
 
         <!-- Blog editor -->
         <div id="blogEditor" style="display:none">
+          <button class="mobile-back-btn" onclick="cancelEdit()">← Back to list</button>
           <h2 class="editor-section-title" id="blogEditorTitle">New Post</h2>
 
           <div class="form-row">
@@ -776,6 +880,7 @@
 
         <!-- Publication editor -->
         <div id="pubEditor" style="display:none">
+          <button class="mobile-back-btn" onclick="cancelEdit()">← Back to list</button>
           <h2 class="editor-section-title" id="pubEditorTitle">New Publication</h2>
 
           <div class="form-row">
@@ -1025,12 +1130,16 @@
       renderSidebar();
     }
 
-    function cancelEdit() { showEmpty(); }
+    function cancelEdit() {
+      document.getElementById('dashboard').classList.remove('mobile-editing');
+      showEmpty();
+    }
 
     // ── BLOG POST EDITING ──
     function newBlogPost() {
       editingPostId = null;
       editingPubId  = null;
+      document.getElementById('dashboard').classList.add('mobile-editing');
       document.getElementById('editorEmpty').style.display = 'none';
       document.getElementById('pubEditor').style.display   = 'none';
       document.getElementById('blogEditor').style.display  = 'block';
@@ -1055,6 +1164,7 @@
       editingPostId = id;
       editingPubId  = null;
 
+      document.getElementById('dashboard').classList.add('mobile-editing');
       document.getElementById('editorEmpty').style.display = 'none';
       document.getElementById('pubEditor').style.display   = 'none';
       document.getElementById('blogEditor').style.display  = 'block';
@@ -1123,6 +1233,7 @@
     function newPublication() {
       editingPubId  = null;
       editingPostId = null;
+      document.getElementById('dashboard').classList.add('mobile-editing');
       document.getElementById('editorEmpty').style.display = 'none';
       document.getElementById('blogEditor').style.display  = 'none';
       document.getElementById('pubEditor').style.display   = 'block';
@@ -1145,6 +1256,7 @@
       editingPubId  = id;
       editingPostId = null;
 
+      document.getElementById('dashboard').classList.add('mobile-editing');
       document.getElementById('editorEmpty').style.display = 'none';
       document.getElementById('blogEditor').style.display  = 'none';
       document.getElementById('pubEditor').style.display   = 'block';
@@ -1287,6 +1399,21 @@
         if (file && file.type.startsWith('image/')) compressAndPreview(file);
       });
     })();
+
+    // ── ADMIN NAV MOBILE TOGGLE ──
+    function toggleAdminNav() {
+      const overlay = document.getElementById('adminNavOverlay');
+      const toggle  = document.getElementById('adminNavToggle');
+      const isOpen  = overlay.classList.toggle('open');
+      toggle.classList.toggle('open', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    }
+
+    function closeAdminNav() {
+      document.getElementById('adminNavOverlay').classList.remove('open');
+      document.getElementById('adminNavToggle').classList.remove('open');
+      document.body.style.overflow = '';
+    }
 
     // ── INIT ──
     if (checkAuth()) {

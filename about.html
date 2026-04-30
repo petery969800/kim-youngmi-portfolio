@@ -399,32 +399,51 @@
 
     /* ── TABLET ── */
     @media (max-width: 1024px) {
-      .bio-layout { grid-template-columns: min(320px, 42%) 1fr; gap: 3.5rem; }
-      .interests-grid { grid-template-columns: 1fr; }
-      .interest-card { padding: 3rem 2.5rem 4rem; }
+      .bio-layout { grid-template-columns: min(300px, 40%) 1fr; gap: 3rem; }
+      .interests-grid { grid-template-columns: 1fr 1fr; }
+      .interest-card { padding: 2.5rem 2rem 3.5rem; }
       .about-section { padding: 6rem var(--gutter); }
+      .quote-band { padding: 6rem var(--gutter); }
+      .row-item { gap: 1.5rem; }
     }
 
     /* ── MOBILE ── */
     @media (max-width: 768px) {
-      :root { --gutter: 1.5rem; }
+      :root { --gutter: 1.25rem; }
       nav { padding: 1.1rem var(--gutter); }
       .nav-links { display: none; }
       .nav-toggle { display: flex; }
 
       #hero { padding: 6rem var(--gutter) 3rem; min-height: 50vh; }
       .hero-watermark { font-size: 45vw; }
+      .hero-name { font-size: clamp(3rem, 12vw, 6rem); }
 
-      .bio-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+      .bio-layout { grid-template-columns: 1fr; gap: 2rem; }
+      .about-photo { max-width: 280px; aspect-ratio: 3/4; }
+      .bio-text p { font-size: 0.975rem; }
 
-      .row-item { flex-direction: column; gap: 0.2rem; }
+      .interests-grid { grid-template-columns: 1fr; }
+      .interest-card { padding: 2.5rem 1.75rem 3rem; }
+      .interest-num { font-size: clamp(3.5rem, 14vw, 5.5rem); margin-bottom: 1.5rem; }
+
+      .row-item { flex-direction: column; gap: 0.25rem; }
       .row-left { flex-direction: column; gap: 0.15rem; }
       .row-note { display: none; }
+      .row-primary { font-size: 0.9rem; }
+      .row-secondary { font-size: 0.825rem; }
 
-      .about-section { padding: 5rem var(--gutter); }
-      .quote-band { padding: 6rem var(--gutter); }
+      .about-section { padding: 4rem var(--gutter); }
+      .section-num { font-size: clamp(4rem, 18vw, 7rem); }
+      .quote-band { padding: 5rem var(--gutter); }
+      .quote-text { font-size: clamp(1.3rem, 5vw, 1.8rem); }
 
-      footer { flex-direction: column; gap: 0.75rem; text-align: center; padding: 2.5rem var(--gutter); }
+      footer { flex-direction: column; gap: 0.75rem; text-align: center; padding: 2rem var(--gutter); }
+    }
+
+    /* ── SMALL MOBILE (≤ 480px) ── */
+    @media (max-width: 480px) {
+      .hero-name { font-size: clamp(2.6rem, 14vw, 4.5rem); }
+      .about-photo { max-width: 220px; }
     }
   </style>
 </head>
