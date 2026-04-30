@@ -668,8 +668,7 @@
 
     document.addEventListener('click', () => langDropdown.classList.remove('open'));
 
-    const saved = localStorage.getItem('lang');
-    if (saved && saved !== 'en') setLang(saved);
+    setLang(localStorage.getItem('lang') || 'ko');
 
     // Hamburger
     const toggle = document.querySelector('.nav-toggle');

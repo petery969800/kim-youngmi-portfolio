@@ -1458,8 +1458,7 @@
     });
 
     // Restore saved language
-    const saved = localStorage.getItem('lang');
-    if (saved && saved !== 'en') setLang(saved);
+    setLang(localStorage.getItem('lang') || 'ko');
 
     // ── SCROLL REVEAL ──
     const observer = new IntersectionObserver((entries) => {

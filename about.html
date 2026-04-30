@@ -748,8 +748,7 @@
 
     document.addEventListener('click', () => langDropdown.classList.remove('open'));
 
-    const saved = localStorage.getItem('lang');
-    if (saved && saved !== 'en') setLang(saved);
+    setLang(localStorage.getItem('lang') || 'ko');
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry, i) => {
