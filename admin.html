@@ -111,6 +111,26 @@
       display: none;
     }
 
+    .logged-in-badge {
+      display: none;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      font-family: inherit;
+      text-transform: uppercase;
+    }
+    .logged-in-badge::before {
+      content: '';
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #4caf50;
+      flex-shrink: 0;
+    }
+
     /* ── DASHBOARD ── */
     #dashboard { display: none; min-height: 100vh; }
 
@@ -741,7 +761,8 @@
       <li><a href="publications.html">Publications</a></li>
       <li><a href="blog.html">Blog</a></li>
       <li><a href="about.html">About</a></li>
-      <li><a href="admin.html" class="active">Login</a></li>
+      <li id="loginNavItem"><a href="admin.html" class="active">Login</a></li>
+      <li><span class="logged-in-badge" id="loggedInBadge">Admin</span></li>
       <li><button class="signout" id="signoutBtn" onclick="logout()" style="display:none">Sign Out</button></li>
     </ul>
     <button class="admin-nav-toggle" id="adminNavToggle" aria-label="Menu" onclick="toggleAdminNav()">
@@ -753,7 +774,8 @@
     <a href="publications.html" onclick="closeAdminNav()">Publications</a>
     <a href="blog.html" onclick="closeAdminNav()">Blog</a>
     <a href="about.html" onclick="closeAdminNav()">About</a>
-    <a href="admin.html" onclick="closeAdminNav()">Login</a>
+    <a href="admin.html" onclick="closeAdminNav()" id="loginNavLinkMobile">Login</a>
+    <span class="logged-in-badge" id="loggedInBadgeMobile">Admin</span>
     <button id="signoutBtnMobile" onclick="logout()" style="display:none">Sign Out</button>
   </div>
 
@@ -1030,13 +1052,22 @@
       return sessionStorage.getItem(KEYS.auth) === 'true';
     }
 
+    function setLoggedInUI(loggedIn) {
+      document.getElementById('loginNavItem').style.display = loggedIn ? 'none' : '';
+      document.getElementById('loginNavLinkMobile').style.display = loggedIn ? 'none' : '';
+      document.getElementById('loggedInBadge').style.display = loggedIn ? 'flex' : 'none';
+      document.getElementById('loggedInBadgeMobile').style.display = loggedIn ? 'flex' : 'none';
+      document.getElementById('signoutBtn').style.display = loggedIn ? 'inline' : 'none';
+      document.getElementById('signoutBtnMobile').style.display = loggedIn ? 'inline' : 'none';
+    }
+
     function submitLogin() {
       const pw = document.getElementById('passwordInput').value;
       if (pw === ADMIN_PASSWORD) {
         sessionStorage.setItem(KEYS.auth, 'true');
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
-        document.getElementById('signoutBtn').style.display = 'inline';
+        setLoggedInUI(true);
         initDefaults();
         renderSidebar();
       } else {
@@ -1419,7 +1450,7 @@
     if (checkAuth()) {
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('dashboard').style.display = 'block';
-      document.getElementById('signoutBtn').style.display = 'inline';
+      setLoggedInUI(true);
       initDefaults();
       renderSidebar();
     }
