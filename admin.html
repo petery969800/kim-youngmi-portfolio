@@ -949,7 +949,7 @@
           </div>
 
           <div class="form-actions">
-            <button class="btn-primary" onclick="saveBlogPost()">저장</button>
+            <button class="btn-primary" onclick="openConfirm('글을 저장할까요?', '현재 내용을 저장합니다.', saveBlogPost)">저장</button>
             <button class="btn-ghost" onclick="cancelEdit()">취소</button>
             <div class="form-actions-right">
               <button class="btn-danger" id="deleteBlogBtn" onclick="confirmDeletePost()" style="display:none">삭제</button>
@@ -989,7 +989,7 @@
           </div>
 
           <div class="form-actions">
-            <button class="btn-primary" onclick="savePublication()">저장</button>
+            <button class="btn-primary" onclick="openConfirm('논문을 저장할까요?', '현재 내용을 저장합니다.', savePublication)">저장</button>
             <button class="btn-ghost" onclick="cancelEdit()">취소</button>
             <div class="form-actions-right">
               <button class="btn-danger" id="deletePubBtn" onclick="confirmDeletePub()" style="display:none">삭제</button>
