@@ -810,10 +810,10 @@
         </div>
       </div>
       <ul class="admin-nav-links">
-        <li><a href="publications.html">연구논문</a></li>
-        <li><a href="blog.html">블로그</a></li>
-        <li><a href="about.html">소개</a></li>
-        <li id="loginNavItem"><a href="admin.html" class="active" id="loginLink">로그인</a></li>
+        <li><a href="publications.html" data-i18n="nav.publications">연구논문</a></li>
+        <li><a href="blog.html" data-i18n="nav.blog">블로그</a></li>
+        <li><a href="about.html" data-i18n="nav.about">소개</a></li>
+        <li id="loginNavItem"><a href="admin.html" class="active" id="loginLink" data-i18n="nav.login">로그인</a></li>
         <li id="adminBadgeItem" style="display:none"><span class="logged-in-badge" id="loggedInBadge">관리자</span></li>
         <li id="signoutItem" style="display:none"><button class="signout-btn" id="signoutBtn" onclick="logout()">로그아웃</button></li>
       </ul>
@@ -1550,7 +1550,21 @@
       document.body.style.overflow = '';
     }
 
-    // ── LANGUAGE DROPDOWN ──
+    // ── LANGUAGE ──
+    const navT = {
+      en: { 'nav.publications': 'Publications', 'nav.blog': 'Blog', 'nav.about': 'About', 'nav.login': 'Login' },
+      ko: { 'nav.publications': '연구논문', 'nav.blog': '블로그', 'nav.about': '소개', 'nav.login': '로그인' }
+    };
+    function setLang(lang) {
+      document.documentElement.lang = lang;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (navT[lang] && navT[lang][key] !== undefined) el.textContent = navT[lang][key];
+      });
+      document.getElementById('currentLang').textContent = lang.toUpperCase();
+      document.querySelectorAll('.lang-option').forEach(o => o.classList.toggle('active', o.dataset.lang === lang));
+      localStorage.setItem('lang_v2', lang);
+    }
     const langDropdown = document.getElementById('langDropdown');
     document.getElementById('langToggleBtn').addEventListener('click', (e) => {
       e.stopPropagation();
@@ -1558,16 +1572,12 @@
     });
     document.querySelectorAll('.lang-option').forEach(opt => {
       opt.addEventListener('click', () => {
-        document.getElementById('currentLang').textContent = opt.dataset.lang.toUpperCase();
-        document.querySelectorAll('.lang-option').forEach(o => o.classList.toggle('active', o === opt));
+        setLang(opt.dataset.lang);
         langDropdown.classList.remove('open');
-        localStorage.setItem('lang_v2', opt.dataset.lang);
       });
     });
     document.addEventListener('click', () => langDropdown.classList.remove('open'));
-    const savedLang = localStorage.getItem('lang_v2') || 'ko';
-    document.getElementById('currentLang').textContent = savedLang.toUpperCase();
-    document.querySelectorAll('.lang-option').forEach(o => o.classList.toggle('active', o.dataset.lang === savedLang));
+    setLang(localStorage.getItem('lang_v2') || 'ko');
 
     // ── DIRTY TRACKING ──
     ['postTitle', 'postDate', 'postImageCaption', 'postVideoUrl'].forEach(id => {
