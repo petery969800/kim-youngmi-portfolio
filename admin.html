@@ -127,12 +127,6 @@
       border-bottom: 1px solid rgba(140,94,20,0.12);
     }
 
-    .admin-left {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-    }
-
     .admin-brand {
       font-family: 'Cormorant Garamond', serif;
       font-size: 1.1rem;
@@ -140,13 +134,6 @@
       letter-spacing: 0.12em;
       color: var(--ivory);
       text-decoration: none;
-    }
-
-    .admin-sep {
-      display: none;
-      width: 1px;
-      height: 14px;
-      background: var(--border);
     }
 
     .logged-in-badge {
@@ -779,17 +766,16 @@
 
   <!-- NAV (always visible) -->
   <header class="admin-header">
-    <div class="admin-left">
-      <a class="admin-brand" href="index.html">KIM YOUNGMI</a>
-      <span class="admin-sep" id="adminSep"></span>
-      <span class="logged-in-badge" id="loggedInBadge">관리자</span>
-      <button class="signout-btn" id="signoutBtn" onclick="logout()">로그아웃</button>
-    </div>
+    <a class="admin-brand" href="index.html">KIM YOUNGMI</a>
     <ul class="admin-nav-links" id="publicNavLinks">
       <li><a href="publications.html">연구논문</a></li>
       <li><a href="blog.html">블로그</a></li>
       <li><a href="about.html">소개</a></li>
       <li id="loginNavItem"><a href="admin.html" class="active">로그인</a></li>
+    </ul>
+    <ul class="admin-nav-links" id="adminNavLinks" style="display:none">
+      <li><span class="logged-in-badge" id="loggedInBadge">관리자</span></li>
+      <li><button class="signout-btn" id="signoutBtn" onclick="logout()">로그아웃</button></li>
     </ul>
     <button class="admin-nav-toggle" id="adminNavToggle" aria-label="Menu" onclick="toggleAdminNav()">
       <span></span><span></span><span></span>
@@ -1092,12 +1078,10 @@
     }
 
     function setLoggedInUI(loggedIn) {
-      document.getElementById('publicNavLinks').style.display   = loggedIn ? 'none' : '';
+      document.getElementById('publicNavLinks').style.display  = loggedIn ? 'none' : '';
+      document.getElementById('adminNavLinks').style.display   = loggedIn ? '' : 'none';
       document.getElementById('mobilePublicLinks').style.display = loggedIn ? 'none' : '';
-      document.getElementById('adminSep').style.display         = loggedIn ? 'block' : 'none';
-      document.getElementById('loggedInBadge').style.display    = loggedIn ? 'flex' : 'none';
-      document.getElementById('signoutBtn').style.display       = loggedIn ? 'inline' : 'none';
-      document.getElementById('mobileAdminLinks').style.display = loggedIn ? 'flex' : 'none';
+      document.getElementById('mobileAdminLinks').style.display  = loggedIn ? 'flex' : 'none';
     }
 
     function submitLogin() {
