@@ -769,6 +769,13 @@
 
     setLang(localStorage.getItem('lang_v2') || 'ko');
 
+    if (sessionStorage.getItem('kim_admin_auth') === 'true') {
+      document.querySelectorAll('[data-i18n="nav.login"]').forEach(el => {
+        el.textContent = '관리자';
+        el.style.color = 'var(--gold)';
+      });
+    }
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry, i) => {
         if (entry.isIntersecting) {

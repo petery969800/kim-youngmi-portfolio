@@ -833,6 +833,13 @@
 
     setLang(localStorage.getItem('lang_v2') || 'ko');
 
+    if (sessionStorage.getItem('kim_admin_auth') === 'true') {
+      document.querySelectorAll('[data-i18n="nav.login"]').forEach(el => {
+        el.textContent = '관리자';
+        el.style.color = 'var(--gold)';
+      });
+    }
+
     // Hamburger
     const toggle = document.querySelector('.nav-toggle');
     const overlay = document.querySelector('.nav-overlay');
