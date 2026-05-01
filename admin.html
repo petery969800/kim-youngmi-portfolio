@@ -1276,7 +1276,9 @@
       document.getElementById('blogEditorTitle').textContent = '새 글';
       document.getElementById('deleteBlogBtn').style.display = 'none';
 
-      document.getElementById('postDate').value         = '';
+      const _now = new Date();
+      const _fmt = _now.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+      document.getElementById('postDate').value         = _fmt;
       document.getElementById('postTitle').value        = '';
       document.getElementById('postBody').innerHTML     = '<p><br></p>';
       document.getElementById('postImageCaption').value = '';
