@@ -111,6 +111,35 @@
       display: none;
     }
 
+    /* ── LANG DROPDOWN ── */
+    .lang-dropdown { position: relative; }
+    .lang-selected {
+      display: flex; align-items: center; gap: 0.35rem;
+      background: none; border: 1px solid rgba(140,94,20,0.25); border-radius: 3px;
+      font-family: 'Inter', sans-serif; font-size: 0.75rem; letter-spacing: 0.15em;
+      color: var(--ivory2); cursor: pointer; padding: 0.3rem 0.65rem;
+      transition: border-color 0.3s, color 0.3s; min-height: 32px; white-space: nowrap;
+    }
+    .lang-selected:hover { border-color: var(--gold); color: var(--gold); }
+    .lang-selected svg { transition: transform 0.25s; }
+    .lang-dropdown.open .lang-selected svg { transform: rotate(180deg); }
+    .lang-menu {
+      position: absolute; top: calc(100% + 0.5rem); left: 0;
+      background: #FAF6EE; border: 1px solid rgba(140,94,20,0.25);
+      box-shadow: 0 4px 16px rgba(40,25,14,0.10); border-radius: 3px;
+      overflow: hidden; min-width: 100%; opacity: 0; pointer-events: none;
+      transform: translateY(-6px); transition: opacity 0.2s, transform 0.2s; z-index: 200;
+    }
+    .lang-dropdown.open .lang-menu { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .lang-option {
+      display: block; width: 100%; padding: 0.6rem 0.85rem;
+      background: none; border: none; font-family: 'Inter', sans-serif;
+      font-size: 0.75rem; letter-spacing: 0.12em; color: var(--muted);
+      cursor: pointer; text-align: left; transition: color 0.2s, background 0.2s; white-space: nowrap;
+    }
+    .lang-option:hover { background: rgba(140,94,20,0.06); color: var(--ivory); }
+    .lang-option.active { color: var(--gold); }
+
     /* ── DASHBOARD ── */
     #dashboard { display: none; min-height: 100vh; padding-top: 4.5rem; }
 
@@ -767,16 +796,26 @@
   <!-- NAV (always visible) -->
   <header class="admin-header">
     <a class="admin-brand" href="index.html">김영미</a>
-    <ul class="admin-nav-links" id="publicNavLinks">
-      <li><a href="publications.html">연구논문</a></li>
-      <li><a href="blog.html">블로그</a></li>
-      <li><a href="about.html">소개</a></li>
-      <li id="loginNavItem"><a href="admin.html" class="active">로그인</a></li>
-    </ul>
-    <ul class="admin-nav-links" id="adminNavLinks" style="display:none">
-      <li><span class="logged-in-badge" id="loggedInBadge">관리자</span></li>
-      <li><button class="signout-btn" id="signoutBtn" onclick="logout()">로그아웃</button></li>
-    </ul>
+    <div style="display:flex;align-items:center;gap:2.5rem;">
+      <div class="lang-dropdown" id="langDropdown">
+        <button class="lang-selected" id="langToggleBtn">
+          <span id="currentLang">KO</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </button>
+        <div class="lang-menu">
+          <button class="lang-option" data-lang="en">EN — English</button>
+          <button class="lang-option active" data-lang="ko">KR — 한국어</button>
+        </div>
+      </div>
+      <ul class="admin-nav-links">
+        <li><a href="publications.html">연구논문</a></li>
+        <li><a href="blog.html">블로그</a></li>
+        <li><a href="about.html">소개</a></li>
+        <li id="loginNavItem"><a href="admin.html" class="active" id="loginLink">로그인</a></li>
+        <li id="adminBadgeItem" style="display:none"><span class="logged-in-badge" id="loggedInBadge">관리자</span></li>
+        <li id="signoutItem" style="display:none"><button class="signout-btn" id="signoutBtn" onclick="logout()">로그아웃</button></li>
+      </ul>
+    </div>
     <button class="admin-nav-toggle" id="adminNavToggle" aria-label="Menu" onclick="toggleAdminNav()">
       <span></span><span></span><span></span>
     </button>
@@ -1078,8 +1117,9 @@
     }
 
     function setLoggedInUI(loggedIn) {
-      document.getElementById('publicNavLinks').style.display  = loggedIn ? 'none' : '';
-      document.getElementById('adminNavLinks').style.display   = loggedIn ? '' : 'none';
+      document.getElementById('loginNavItem').style.display    = loggedIn ? 'none' : '';
+      document.getElementById('adminBadgeItem').style.display  = loggedIn ? '' : 'none';
+      document.getElementById('signoutItem').style.display     = loggedIn ? '' : 'none';
       document.getElementById('mobilePublicLinks').style.display = loggedIn ? 'none' : '';
       document.getElementById('mobileAdminLinks').style.display  = loggedIn ? 'flex' : 'none';
     }
@@ -1507,6 +1547,25 @@
       document.getElementById('adminNavToggle').classList.remove('open');
       document.body.style.overflow = '';
     }
+
+    // ── LANGUAGE DROPDOWN ──
+    const langDropdown = document.getElementById('langDropdown');
+    document.getElementById('langToggleBtn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      langDropdown.classList.toggle('open');
+    });
+    document.querySelectorAll('.lang-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        document.getElementById('currentLang').textContent = opt.dataset.lang.toUpperCase();
+        document.querySelectorAll('.lang-option').forEach(o => o.classList.toggle('active', o === opt));
+        langDropdown.classList.remove('open');
+        localStorage.setItem('lang_v2', opt.dataset.lang);
+      });
+    });
+    document.addEventListener('click', () => langDropdown.classList.remove('open'));
+    const savedLang = localStorage.getItem('lang_v2') || 'ko';
+    document.getElementById('currentLang').textContent = savedLang.toUpperCase();
+    document.querySelectorAll('.lang-option').forEach(o => o.classList.toggle('active', o.dataset.lang === savedLang));
 
     // ── DIRTY TRACKING ──
     ['postTitle', 'postDate', 'postImageCaption', 'postVideoUrl'].forEach(id => {
