@@ -1468,8 +1468,9 @@
       confirmCallback = callback;
       document.getElementById('confirmOverlay').classList.add('show');
       document.getElementById('confirmOkBtn').onclick = () => {
+        const cb = confirmCallback;
         closeConfirm();
-        if (confirmCallback) confirmCallback();
+        if (cb) cb();
       };
     }
 
