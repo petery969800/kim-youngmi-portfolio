@@ -333,7 +333,7 @@
         <li><a href="publications.html" class="active" data-i18n="nav.publications">Publications</a></li>
         <li><a href="blog.html" data-i18n="nav.blog">Blog</a></li>
         <li><a href="about.html" data-i18n="nav.about">About</a></li>
-        <li><a href="admin.html">Login</a></li>
+        <li><a href="admin.html" data-i18n="nav.login">Login</a></li>
       </ul>
     </div>
     <button class="nav-toggle" aria-label="Toggle navigation">
@@ -345,7 +345,7 @@
     <a href="publications.html" data-i18n="nav.publications" onclick="closeNav()">Publications</a>
     <a href="blog.html" data-i18n="nav.blog" onclick="closeNav()">Blog</a>
     <a href="about.html" data-i18n="nav.about" onclick="closeNav()">About</a>
-    <a href="admin.html" onclick="closeNav()">Login</a>
+    <a href="admin.html" onclick="closeNav()" data-i18n="nav.login">Login</a>
   </div>
 
   <!-- HEADER -->
@@ -499,13 +499,13 @@
 
     const t = {
       en: {
-        'nav.brand': 'KIM YOUNGMI', 'nav.publications': 'Publications', 'nav.blog': 'Blog', 'nav.about': 'About',
+        'nav.brand': 'KIM YOUNGMI', 'nav.publications': 'Publications', 'nav.blog': 'Blog', 'nav.about': 'About', 'nav.login': 'Login',
         'pub.label': 'Journal Publications', 'pub.title': 'Publications',
         'footer.name': 'Kim Youngmi',
         'footer.copy': 'Department of Public Administration\u00a0·\u00a0Sangmyung University\u00a0·\u00a0Seoul, Korea',
       },
       ko: {
-        'nav.brand': '김영미', 'nav.publications': '연구논문', 'nav.blog': '블로그', 'nav.about': '소개',
+        'nav.brand': '김영미', 'nav.publications': '연구논문', 'nav.blog': '블로그', 'nav.about': '소개', 'nav.login': '로그인',
         'pub.label': '학술논문', 'pub.title': '연구 업적',
         'footer.name': '김영미',
         'footer.copy': '행정학과\u00a0·\u00a0상명대학교\u00a0·\u00a0서울, 대한민국',
