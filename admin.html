@@ -896,7 +896,7 @@
           <div class="form-row">
             <div class="form-group">
               <label class="form-label" for="postDate">날짜</label>
-              <input class="form-input" type="text" id="postDate" placeholder="예: 2026년 4월 17일" />
+              <input class="form-input" type="text" id="postDate" readonly style="cursor:default;opacity:0.65;pointer-events:none;" />
             </div>
             <div class="form-group">
               <label class="form-label" for="postTitle">제목 <span style="font-weight:300;text-transform:none;letter-spacing:0">(선택)</span></label>
@@ -1319,23 +1319,24 @@
     }
 
     function saveBlogPost() {
-      const date       = document.getElementById('postDate').value.trim();
       const title      = document.getElementById('postTitle').value.trim();
       const body       = document.getElementById('postBody').innerHTML;
       const imageUrl   = document.getElementById('imagePreviewImg').src.startsWith('data:') || document.getElementById('imagePreviewImg').src.startsWith('http')
                            ? document.getElementById('imagePreviewImg').src : '';
       const imageCap   = document.getElementById('postImageCaption').value.trim();
       const videoUrl   = document.getElementById('postVideoUrl').value.trim();
-
-      if (!date) { alert('날짜를 입력해 주세요.'); return; }
+      const todayFmt   = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
 
       const posts = loadPosts();
 
       if (editingPostId) {
         const idx = posts.findIndex(p => p.id === editingPostId);
-        if (idx >= 0) posts[idx] = { id: editingPostId, date, title, body, imageUrl, imageCaption: imageCap, videoUrl };
+        if (idx >= 0) {
+          const orig = posts[idx];
+          posts[idx] = { id: editingPostId, date: orig.date, title, body, imageUrl, imageCaption: imageCap, videoUrl };
+        }
       } else {
-        posts.unshift({ id: genId(), date, title, body, imageUrl, imageCaption: imageCap, videoUrl });
+        posts.unshift({ id: genId(), date: todayFmt, title, body, imageUrl, imageCaption: imageCap, videoUrl });
         editingPostId = posts[0].id;
       }
 
@@ -1582,7 +1583,7 @@
     setLang(localStorage.getItem('lang_v2') || 'ko');
 
     // ── DIRTY TRACKING ──
-    ['postTitle', 'postDate', 'postImageCaption', 'postVideoUrl'].forEach(id => {
+    ['postTitle', 'postImageCaption', 'postVideoUrl'].forEach(id => {
       document.getElementById(id).addEventListener('input', () => { isDirty = true; });
     });
     document.getElementById('postBody').addEventListener('input', () => { isDirty = true; });
