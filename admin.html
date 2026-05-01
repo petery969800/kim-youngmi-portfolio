@@ -144,8 +144,8 @@
     #dashboard { display: none; min-height: 100vh; }
 
     .admin-header {
-      position: fixed;
-      top: 0; left: 0; right: 0;
+      position: sticky;
+      top: 0;
       z-index: 100;
       display: flex;
       justify-content: space-between;
@@ -304,7 +304,6 @@
       background: #FFFFFF;
       display: flex;
       flex-direction: column;
-      padding-top: 4.5rem;
     }
 
     .sidebar-tabs {
@@ -409,7 +408,6 @@
     /* ── EDITOR PANEL ── */
     .editor-panel {
       padding: 2.5rem 3rem;
-      padding-top: calc(4.5rem + 2.5rem);
       overflow-y: auto;
     }
 
