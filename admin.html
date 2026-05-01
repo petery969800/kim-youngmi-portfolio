@@ -1223,7 +1223,7 @@
             <div class="list-item-title">${esc(p.title || '(untitled)')}</div>
             <div class="list-item-meta">${esc(p.date)}</div>
           </div>
-          <button class="list-item-del" title="Delete" onclick="event.stopPropagation(); quickDeletePost('${esc(p.id)}')">×</button>
+          <button class="list-item-del" title="Delete" onclick="event.stopPropagation(); openConfirm('글을 삭제할까요?', '이 작업은 되돌릴 수 없습니다.', () => quickDeletePost('${esc(p.id)}'))">×</button>
         </div>
       `).join('') || '<div style="padding:1rem 1.5rem;font-size:0.82rem;color:var(--muted);">아직 게시된 글이 없습니다.</div>';
 
@@ -1235,7 +1235,7 @@
             <div class="list-item-title">${esc(p.title)}</div>
             <div class="list-item-meta">${esc(p.year)}</div>
           </div>
-          <button class="list-item-del" title="Delete" onclick="event.stopPropagation(); quickDeletePub('${esc(p.id)}')">×</button>
+          <button class="list-item-del" title="Delete" onclick="event.stopPropagation(); openConfirm('논문을 삭제할까요?', '이 작업은 되돌릴 수 없습니다.', () => quickDeletePub('${esc(p.id)}'))">×</button>
         </div>
       `).join('') || '<div style="padding:1rem 1.5rem;font-size:0.82rem;color:var(--muted);">No publications yet.</div>';
     }
