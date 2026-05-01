@@ -411,6 +411,39 @@
       overflow-y: auto;
     }
 
+    /* ── VIEW MODE ── */
+    .view-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .view-actions { display: flex; gap: 0.75rem; flex-shrink: 0; align-items: center; }
+    .view-date {
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+    .view-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.55rem;
+      font-weight: 400;
+      color: var(--ivory);
+      line-height: 1.25;
+    }
+    .view-body { font-size: 0.93rem; line-height: 1.85; color: var(--ivory); margin-bottom: 2rem; }
+    .view-body p { margin-bottom: 1em; }
+    .view-body strong { font-weight: 500; }
+    .view-pub-meta { display: flex; flex-direction: column; gap: 0.3rem; margin-top: 1.25rem; }
+    .view-pub-row { font-size: 0.85rem; color: var(--muted); }
+    .view-pub-row a { color: var(--gold); text-decoration: none; }
+    .view-pub-row a:hover { text-decoration: underline; }
+
     .editor-empty {
       display: flex;
       flex-direction: column;
@@ -996,6 +1029,40 @@
             </div>
           </div>
         </div>
+
+        <!-- Blog view (read-only) -->
+        <div id="blogView" style="display:none">
+          <button class="mobile-back-btn" onclick="cancelEdit()">← 목록으로</button>
+          <div class="view-header">
+            <div>
+              <p class="view-date" id="viewPostDate"></p>
+              <h2 class="view-title" id="viewPostTitle"></h2>
+            </div>
+            <div class="view-actions">
+              <button class="btn-primary" onclick="enterBlogEditMode()">편집</button>
+              <button class="btn-danger" onclick="confirmDeletePost()">삭제</button>
+            </div>
+          </div>
+          <div class="view-body" id="viewPostBody"></div>
+          <div id="viewPostMedia"></div>
+        </div>
+
+        <!-- Publication view (read-only) -->
+        <div id="pubView" style="display:none">
+          <button class="mobile-back-btn" onclick="cancelEdit()">← 목록으로</button>
+          <div class="view-header">
+            <div>
+              <p class="view-date" id="viewPubYear"></p>
+              <h2 class="view-title" id="viewPubTitle"></h2>
+            </div>
+            <div class="view-actions">
+              <button class="btn-primary" onclick="enterPubEditMode()">편집</button>
+              <button class="btn-danger" onclick="confirmDeletePub()">삭제</button>
+            </div>
+          </div>
+          <div class="view-pub-meta" id="viewPubLinks"></div>
+        </div>
+
       </main>
     </div>
   </div>
@@ -1254,6 +1321,8 @@
       document.getElementById('editorEmpty').style.display  = 'flex';
       document.getElementById('blogEditor').style.display   = 'none';
       document.getElementById('pubEditor').style.display    = 'none';
+      document.getElementById('blogView').style.display     = 'none';
+      document.getElementById('pubView').style.display      = 'none';
       editingPostId = null;
       editingPubId  = null;
       renderSidebar();
@@ -1293,14 +1362,41 @@
       const posts = loadPosts();
       const post = posts.find(p => p.id === id);
       if (!post) return;
-
       editingPostId = id;
       editingPubId  = null;
+      showBlogView(post);
+      renderSidebar();
+    }
 
+    function showBlogView(post) {
       document.getElementById('dashboard').classList.add('mobile-editing');
       document.getElementById('editorEmpty').style.display = 'none';
+      document.getElementById('blogEditor').style.display  = 'none';
       document.getElementById('pubEditor').style.display   = 'none';
-      document.getElementById('blogEditor').style.display  = 'block';
+      document.getElementById('pubView').style.display     = 'none';
+      document.getElementById('blogView').style.display    = 'block';
+
+      document.getElementById('viewPostDate').textContent  = post.date || '';
+      document.getElementById('viewPostTitle').textContent = post.title || '(제목 없음)';
+      document.getElementById('viewPostBody').innerHTML    = post.body || '';
+
+      const media = document.getElementById('viewPostMedia');
+      if (post.videoUrl) {
+        media.innerHTML = `<div class="post-video"><iframe src="${esc(getEmbedUrl(post.videoUrl))}" allowfullscreen></iframe></div>`;
+      } else if (post.imageUrl) {
+        media.innerHTML = `<figure class="post-image"><img src="${esc(post.imageUrl)}" alt="${esc(post.imageCaption || '')}"/>${post.imageCaption ? `<figcaption>${esc(post.imageCaption)}</figcaption>` : ''}</figure>`;
+      } else {
+        media.innerHTML = '';
+      }
+    }
+
+    function enterBlogEditMode() {
+      const posts = loadPosts();
+      const post  = posts.find(p => p.id === editingPostId);
+      if (!post) return;
+
+      document.getElementById('blogView').style.display   = 'none';
+      document.getElementById('blogEditor').style.display = 'block';
       document.getElementById('blogEditorTitle').textContent = '글 편집';
       document.getElementById('deleteBlogBtn').style.display = 'inline-flex';
 
@@ -1309,13 +1405,8 @@
       document.getElementById('postBody').innerHTML     = post.body || '<p><br></p>';
       document.getElementById('postImageCaption').value = post.imageCaption || '';
       document.getElementById('postVideoUrl').value     = post.videoUrl || '';
-      if (post.imageUrl) {
-        setImagePreview(post.imageUrl);
-      } else {
-        clearImagePreview();
-      }
-
-      renderSidebar();
+      if (post.imageUrl) setImagePreview(post.imageUrl);
+      else clearImagePreview();
     }
 
     function saveBlogPost() {
@@ -1344,8 +1435,8 @@
       savePosts(posts);
       renderSidebar();
       showToast('글이 저장되었습니다.');
-      document.getElementById('deleteBlogBtn').style.display = 'inline-flex';
-      document.getElementById('blogEditorTitle').textContent = '글 편집';
+      const saved = loadPosts().find(p => p.id === editingPostId);
+      if (saved) showBlogView(saved);
     }
 
     function confirmDeletePost() {
@@ -1387,16 +1478,38 @@
     function editPublication(id) {
       isDirty = false;
       const pubs = loadPublications();
-      const pub = pubs.find(p => p.id === id);
+      const pub  = pubs.find(p => p.id === id);
       if (!pub) return;
-
       editingPubId  = id;
       editingPostId = null;
+      showPubView(pub);
+      renderSidebar();
+    }
 
+    function showPubView(pub) {
       document.getElementById('dashboard').classList.add('mobile-editing');
       document.getElementById('editorEmpty').style.display = 'none';
       document.getElementById('blogEditor').style.display  = 'none';
-      document.getElementById('pubEditor').style.display   = 'block';
+      document.getElementById('pubEditor').style.display   = 'none';
+      document.getElementById('blogView').style.display    = 'none';
+      document.getElementById('pubView').style.display     = 'block';
+
+      document.getElementById('viewPubYear').textContent  = pub.year || '';
+      document.getElementById('viewPubTitle').textContent = pub.title || '(제목 없음)';
+
+      const links = [];
+      if (pub.viewLink && pub.viewLink !== '#') links.push(`<div class="view-pub-row">보기 / DOI: <a href="${esc(pub.viewLink)}" target="_blank" rel="noopener">${esc(pub.viewLink)}</a></div>`);
+      if (pub.pdfLink  && pub.pdfLink  !== '#') links.push(`<div class="view-pub-row">PDF: <a href="${esc(pub.pdfLink)}"  target="_blank" rel="noopener">${esc(pub.pdfLink)}</a></div>`);
+      document.getElementById('viewPubLinks').innerHTML = links.join('') || '<div class="view-pub-row" style="color:var(--muted)">링크 없음</div>';
+    }
+
+    function enterPubEditMode() {
+      const pubs = loadPublications();
+      const pub  = pubs.find(p => p.id === editingPubId);
+      if (!pub) return;
+
+      document.getElementById('pubView').style.display   = 'none';
+      document.getElementById('pubEditor').style.display = 'block';
       document.getElementById('pubEditorTitle').textContent = '논문 편집';
       document.getElementById('deletePubBtn').style.display = 'inline-flex';
 
@@ -1404,8 +1517,6 @@
       document.getElementById('pubTitle').value    = pub.title || '';
       document.getElementById('pubViewLink').value = pub.viewLink || '';
       document.getElementById('pubPdfLink').value  = pub.pdfLink || '';
-
-      renderSidebar();
     }
 
     function savePublication() {
@@ -1433,8 +1544,8 @@
       savePublications(pubs);
       renderSidebar();
       showToast('논문이 저장되었습니다.');
-      document.getElementById('deletePubBtn').style.display = 'inline-flex';
-      document.getElementById('pubEditorTitle').textContent = '논문 편집';
+      const savedPub = loadPublications().find(p => p.id === editingPubId);
+      if (savedPub) showPubView(savedPub);
     }
 
     function confirmDeletePub() {
