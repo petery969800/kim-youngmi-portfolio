@@ -761,9 +761,9 @@
       <li><a href="publications.html">Publications</a></li>
       <li><a href="blog.html">Blog</a></li>
       <li><a href="about.html">About</a></li>
-      <li id="loginNavItem"><a href="admin.html" class="active">Login</a></li>
-      <li><span class="logged-in-badge" id="loggedInBadge">Admin</span></li>
-      <li><button class="signout" id="signoutBtn" onclick="logout()" style="display:none">Sign Out</button></li>
+      <li id="loginNavItem"><a href="admin.html" class="active">로그인</a></li>
+      <li><span class="logged-in-badge" id="loggedInBadge">관리자</span></li>
+      <li><button class="signout" id="signoutBtn" onclick="logout()" style="display:none">로그아웃</button></li>
     </ul>
     <button class="admin-nav-toggle" id="adminNavToggle" aria-label="Menu" onclick="toggleAdminNav()">
       <span></span><span></span><span></span>
@@ -774,21 +774,21 @@
     <a href="publications.html" onclick="closeAdminNav()">Publications</a>
     <a href="blog.html" onclick="closeAdminNav()">Blog</a>
     <a href="about.html" onclick="closeAdminNav()">About</a>
-    <a href="admin.html" onclick="closeAdminNav()" id="loginNavLinkMobile">Login</a>
-    <span class="logged-in-badge" id="loggedInBadgeMobile">Admin</span>
-    <button id="signoutBtnMobile" onclick="logout()" style="display:none">Sign Out</button>
+    <a href="admin.html" onclick="closeAdminNav()" id="loginNavLinkMobile">로그인</a>
+    <span class="logged-in-badge" id="loggedInBadgeMobile">관리자</span>
+    <button id="signoutBtnMobile" onclick="logout()" style="display:none">로그아웃</button>
   </div>
 
   <!-- LOGIN SCREEN -->
   <div id="loginScreen">
     <div class="login-card">
       <p class="login-logo">KIM YOUNGMI</p>
-      <p class="login-sub">Admin Portal</p>
-      <label class="login-label" for="passwordInput">Password</label>
-      <input class="login-input" type="password" id="passwordInput" placeholder="Enter password"
+      <p class="login-sub">관리자 포털</p>
+      <label class="login-label" for="passwordInput">비밀번호</label>
+      <input class="login-input" type="password" id="passwordInput" placeholder="비밀번호 입력"
              onkeydown="if(event.key==='Enter') submitLogin()" />
-      <button class="login-btn" onclick="submitLogin()">Sign In</button>
-      <p class="login-error" id="loginError">Incorrect password. Please try again.</p>
+      <button class="login-btn" onclick="submitLogin()">로그인</button>
+      <p class="login-error" id="loginError">비밀번호가 올바르지 않습니다. 다시 시도해 주세요.</p>
     </div>
   </div>
 
@@ -953,8 +953,16 @@
       <p class="confirm-text" id="confirmText">This cannot be undone.</p>
       <div class="confirm-actions">
         <button class="btn-danger" id="confirmOkBtn">Delete</button>
-        <button class="btn-ghost" onclick="closeConfirm()">Cancel</button>
+        <button class="btn-ghost" onclick="closeConfirm()">취소</button>
       </div>
+    </div>
+  </div>
+
+  <div id="logoutOverlay" style="display:none;position:fixed;inset:0;background:rgba(40,25,14,0.5);z-index:600;align-items:center;justify-content:center;">
+    <div class="confirm-card">
+      <p class="confirm-title">로그아웃</p>
+      <p class="confirm-text" id="logoutMsg">정말 로그아웃하시겠습니까?</p>
+      <div class="confirm-actions" id="logoutActions"></div>
     </div>
   </div>
 
@@ -1023,6 +1031,7 @@
     let currentTab = 'blog';
     let editingPostId = null;
     let editingPubId = null;
+    let isDirty = false;
 
     // ── UTILS ──
     function esc(str) {
@@ -1078,6 +1087,39 @@
     }
 
     function logout() {
+      const overlay = document.getElementById('logoutOverlay');
+      const msg     = document.getElementById('logoutMsg');
+      const actions = document.getElementById('logoutActions');
+      overlay.style.display = 'flex';
+
+      if (isDirty) {
+        msg.textContent = '작성 중인 내용이 저장되지 않았습니다.';
+        actions.innerHTML = `
+          <button class="btn-primary" onclick="doSaveThenLogout()">저장 후 로그아웃</button>
+          <button class="btn-danger"  onclick="doLogout()">저장 없이 로그아웃</button>
+          <button class="btn-ghost"   onclick="closeLogout()">취소</button>`;
+      } else {
+        msg.textContent = '정말 로그아웃하시겠습니까?';
+        actions.innerHTML = `
+          <button class="btn-primary" onclick="doLogout()">로그아웃</button>
+          <button class="btn-ghost"   onclick="closeLogout()">취소</button>`;
+      }
+    }
+
+    function closeLogout() {
+      document.getElementById('logoutOverlay').style.display = 'none';
+    }
+
+    function doLogout() {
+      isDirty = false;
+      sessionStorage.removeItem(KEYS.auth);
+      location.reload();
+    }
+
+    function doSaveThenLogout() {
+      if (currentTab === 'blog') saveBlogPost();
+      else savePublication();
+      isDirty = false;
       sessionStorage.removeItem(KEYS.auth);
       location.reload();
     }
@@ -1168,6 +1210,7 @@
 
     // ── BLOG POST EDITING ──
     function newBlogPost() {
+      isDirty = false;
       editingPostId = null;
       editingPubId  = null;
       document.getElementById('dashboard').classList.add('mobile-editing');
@@ -1188,6 +1231,7 @@
     }
 
     function editBlogPost(id) {
+      isDirty = false;
       const posts = loadPosts();
       const post = posts.find(p => p.id === id);
       if (!post) return;
@@ -1237,6 +1281,7 @@
         editingPostId = posts[0].id;
       }
 
+      isDirty = false;
       savePosts(posts);
       renderSidebar();
       showToast('Post saved.');
@@ -1262,6 +1307,7 @@
 
     // ── PUBLICATION EDITING ──
     function newPublication() {
+      isDirty = false;
       editingPubId  = null;
       editingPostId = null;
       document.getElementById('dashboard').classList.add('mobile-editing');
@@ -1280,6 +1326,7 @@
     }
 
     function editPublication(id) {
+      isDirty = false;
       const pubs = loadPublications();
       const pub = pubs.find(p => p.id === id);
       if (!pub) return;
@@ -1323,6 +1370,7 @@
 
       // Sort by year descending
       pubs.sort((a, b) => b.year - a.year);
+      isDirty = false;
       savePublications(pubs);
       renderSidebar();
       showToast('Publication saved.');
@@ -1445,6 +1493,15 @@
       document.getElementById('adminNavToggle').classList.remove('open');
       document.body.style.overflow = '';
     }
+
+    // ── DIRTY TRACKING ──
+    ['postTitle', 'postDate', 'postImageCaption', 'postVideoUrl'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => { isDirty = true; });
+    });
+    document.getElementById('postBody').addEventListener('input', () => { isDirty = true; });
+    ['pubTitle', 'pubYear', 'pubViewLink', 'pubPdfLink'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => { isDirty = true; });
+    });
 
     // ── INIT ──
     if (checkAuth()) {
