@@ -830,17 +830,17 @@
       <aside class="sidebar">
         <div class="sidebar-tabs">
           <button class="sidebar-tab active" id="tabBlog" onclick="switchTab('blog')">
-            Blog Posts <span class="tab-count" id="blogCount">0</span>
+            블로그 <span class="tab-count" id="blogCount">0</span>
           </button>
           <button class="sidebar-tab" id="tabPub" onclick="switchTab('pub')">
-            Publications <span class="tab-count" id="pubCount">0</span>
+            연구논문 <span class="tab-count" id="pubCount">0</span>
           </button>
         </div>
 
         <!-- Blog list -->
         <div id="blogSection">
           <div class="sidebar-new-btn">
-            <button class="btn-primary" style="width:100%" onclick="newBlogPost()">+ New Post</button>
+            <button class="btn-primary" style="width:100%" onclick="newBlogPost()">+ 새 글</button>
           </div>
           <div class="sidebar-list" id="blogList"></div>
         </div>
@@ -848,7 +848,7 @@
         <!-- Publications list -->
         <div id="pubSection" style="display:none">
           <div class="sidebar-new-btn">
-            <button class="btn-primary" style="width:100%" onclick="newPublication()">+ New Publication</button>
+            <button class="btn-primary" style="width:100%" onclick="newPublication()">+ 새 논문</button>
           </div>
           <div class="sidebar-list" id="pubList"></div>
         </div>
@@ -858,114 +858,114 @@
       <main class="editor-panel" id="editorPanel">
         <div class="editor-empty" id="editorEmpty">
           <div class="editor-empty-icon">✦</div>
-          <p>Select an item to edit, or create a new one.</p>
+          <p>항목을 선택하거나 새로 만드세요.</p>
         </div>
 
         <!-- Blog editor -->
         <div id="blogEditor" style="display:none">
-          <button class="mobile-back-btn" onclick="cancelEdit()">← Back to list</button>
-          <h2 class="editor-section-title" id="blogEditorTitle">New Post</h2>
+          <button class="mobile-back-btn" onclick="cancelEdit()">← 목록으로</button>
+          <h2 class="editor-section-title" id="blogEditorTitle">새 글</h2>
 
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label" for="postDate">Date</label>
-              <input class="form-input" type="text" id="postDate" placeholder="e.g. April 17, 2026" />
+              <label class="form-label" for="postDate">날짜</label>
+              <input class="form-input" type="text" id="postDate" placeholder="예: 2026년 4월 17일" />
             </div>
             <div class="form-group">
-              <label class="form-label" for="postTitle">Title <span style="font-weight:300;text-transform:none;letter-spacing:0">(optional)</span></label>
-              <input class="form-input" type="text" id="postTitle" placeholder="Leave blank for title-less post" />
+              <label class="form-label" for="postTitle">제목 <span style="font-weight:300;text-transform:none;letter-spacing:0">(선택)</span></label>
+              <input class="form-input" type="text" id="postTitle" placeholder="제목 없이 게시하려면 비워두세요" />
             </div>
           </div>
 
           <div class="form-group">
-            <label class="form-label">Body</label>
+            <label class="form-label">본문</label>
             <div class="editor-toolbar">
               <button class="toolbar-btn" title="Bold" onmousedown="event.preventDefault(); document.execCommand('bold')"><strong>B</strong></button>
               <button class="toolbar-btn" title="Italic" onmousedown="event.preventDefault(); document.execCommand('italic')"><em>I</em></button>
               <div class="toolbar-sep"></div>
-              <button class="toolbar-btn" title="Add divider line" onmousedown="event.preventDefault(); insertDivider()">— Line</button>
+              <button class="toolbar-btn" title="구분선 추가" onmousedown="event.preventDefault(); insertDivider()">— 구분선</button>
               <div class="toolbar-sep"></div>
               <button class="toolbar-btn" title="Undo" onmousedown="event.preventDefault(); document.execCommand('undo')">↩</button>
             </div>
             <div class="editor-body" id="postBody" contenteditable="true"
                  onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); document.execCommand('insertParagraph'); }"></div>
-            <p class="form-hint">Type and use the toolbar for formatting. Press Enter for new paragraph.</p>
+            <p class="form-hint">툴바를 사용해 서식을 지정하세요. Enter 키로 새 단락을 추가합니다.</p>
           </div>
 
           <div class="media-section">
-            <p class="media-section-title">Image (optional)</p>
+            <p class="media-section-title">이미지 (선택)</p>
             <div class="upload-area" id="uploadArea">
               <input type="file" id="postImageFile" accept="image/*" onchange="handleImageUpload(this)" />
               <p class="upload-label">
-                <strong>Click to upload</strong> or drag & drop<br>
-                <span style="font-size:0.75rem">JPG, PNG, WEBP — auto-compressed to save space</span>
+                <strong>클릭하여 업로드</strong> 또는 드래그 앤 드롭<br>
+                <span style="font-size:0.75rem">JPG, PNG, WEBP — 자동 압축 처리됩니다</span>
               </p>
             </div>
-            <p class="upload-processing" id="uploadProcessing">Compressing image…</p>
+            <p class="upload-processing" id="uploadProcessing">이미지 압축 중…</p>
             <div class="image-preview" id="imagePreview">
               <img id="imagePreviewImg" src="" alt="Preview" />
               <button class="image-preview-remove" onclick="removeImage()" title="Remove image">×</button>
             </div>
             <div class="form-group" style="margin-bottom:0; margin-top:0.75rem">
-              <label class="form-label" for="postImageCaption">Caption</label>
-              <input class="form-input" type="text" id="postImageCaption" placeholder="Optional caption" />
+              <label class="form-label" for="postImageCaption">캡션</label>
+              <input class="form-input" type="text" id="postImageCaption" placeholder="캡션 (선택)" />
             </div>
           </div>
 
           <div class="media-section">
-            <p class="media-section-title">YouTube Video (optional)</p>
+            <p class="media-section-title">YouTube 동영상 (선택)</p>
             <div class="form-group" style="margin-bottom:0">
               <label class="form-label" for="postVideoUrl">YouTube URL</label>
               <input class="form-input" type="url" id="postVideoUrl" placeholder="https://www.youtube.com/watch?v=..." />
-              <p class="form-hint">Paste any YouTube link — watch or share URL both work.</p>
+              <p class="form-hint">YouTube 링크를 붙여넣으세요. 일반 URL과 공유 URL 모두 사용 가능합니다.</p>
             </div>
           </div>
 
           <div class="form-actions">
-            <button class="btn-primary" onclick="saveBlogPost()">Save Post</button>
-            <button class="btn-ghost" onclick="cancelEdit()">Cancel</button>
+            <button class="btn-primary" onclick="saveBlogPost()">저장</button>
+            <button class="btn-ghost" onclick="cancelEdit()">취소</button>
             <div class="form-actions-right">
-              <button class="btn-danger" id="deleteBlogBtn" onclick="confirmDeletePost()" style="display:none">Delete Post</button>
+              <button class="btn-danger" id="deleteBlogBtn" onclick="confirmDeletePost()" style="display:none">삭제</button>
             </div>
           </div>
         </div>
 
         <!-- Publication editor -->
         <div id="pubEditor" style="display:none">
-          <button class="mobile-back-btn" onclick="cancelEdit()">← Back to list</button>
-          <h2 class="editor-section-title" id="pubEditorTitle">New Publication</h2>
+          <button class="mobile-back-btn" onclick="cancelEdit()">← 목록으로</button>
+          <h2 class="editor-section-title" id="pubEditorTitle">새 논문</h2>
 
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label" for="pubYear">Year</label>
+              <label class="form-label" for="pubYear">연도</label>
               <input class="form-input" type="number" id="pubYear" placeholder="2024" min="1900" max="2100" />
             </div>
             <div></div>
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="pubTitle">Title</label>
-            <input class="form-input" type="text" id="pubTitle" placeholder="Full publication title" />
+            <label class="form-label" for="pubTitle">제목</label>
+            <input class="form-input" type="text" id="pubTitle" placeholder="논문 제목 전체" />
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label" for="pubViewLink">View / DOI Link</label>
+              <label class="form-label" for="pubViewLink">보기 / DOI 링크</label>
               <input class="form-input" type="url" id="pubViewLink" placeholder="https://..." />
-              <p class="form-hint">Link to journal page or DOI</p>
+              <p class="form-hint">저널 페이지 또는 DOI 링크</p>
             </div>
             <div class="form-group">
-              <label class="form-label" for="pubPdfLink">PDF Link</label>
+              <label class="form-label" for="pubPdfLink">PDF 링크</label>
               <input class="form-input" type="url" id="pubPdfLink" placeholder="https://..." />
-              <p class="form-hint">Direct PDF download link</p>
+              <p class="form-hint">PDF 직접 다운로드 링크</p>
             </div>
           </div>
 
           <div class="form-actions">
-            <button class="btn-primary" onclick="savePublication()">Save Publication</button>
-            <button class="btn-ghost" onclick="cancelEdit()">Cancel</button>
+            <button class="btn-primary" onclick="savePublication()">저장</button>
+            <button class="btn-ghost" onclick="cancelEdit()">취소</button>
             <div class="form-actions-right">
-              <button class="btn-danger" id="deletePubBtn" onclick="confirmDeletePub()" style="display:none">Delete</button>
+              <button class="btn-danger" id="deletePubBtn" onclick="confirmDeletePub()" style="display:none">삭제</button>
             </div>
           </div>
         </div>
@@ -979,10 +979,10 @@
   <!-- CONFIRM DIALOG -->
   <div id="confirmOverlay">
     <div class="confirm-card">
-      <p class="confirm-title" id="confirmTitle">Confirm Delete</p>
-      <p class="confirm-text" id="confirmText">This cannot be undone.</p>
+      <p class="confirm-title" id="confirmTitle">삭제 확인</p>
+      <p class="confirm-text" id="confirmText">이 작업은 되돌릴 수 없습니다.</p>
       <div class="confirm-actions">
-        <button class="btn-danger" id="confirmOkBtn">Delete</button>
+        <button class="btn-danger" id="confirmOkBtn">삭제</button>
         <button class="btn-ghost" onclick="closeConfirm()">취소</button>
       </div>
     </div>
@@ -1199,7 +1199,7 @@
           </div>
           <button class="list-item-del" title="Delete" onclick="event.stopPropagation(); quickDeletePost('${esc(p.id)}')">×</button>
         </div>
-      `).join('') || '<div style="padding:1rem 1.5rem;font-size:0.82rem;color:var(--muted);">No posts yet.</div>';
+      `).join('') || '<div style="padding:1rem 1.5rem;font-size:0.82rem;color:var(--muted);">아직 게시된 글이 없습니다.</div>';
 
       // Pub list
       const pubList = document.getElementById('pubList');
@@ -1247,7 +1247,7 @@
       document.getElementById('editorEmpty').style.display = 'none';
       document.getElementById('pubEditor').style.display   = 'none';
       document.getElementById('blogEditor').style.display  = 'block';
-      document.getElementById('blogEditorTitle').textContent = 'New Post';
+      document.getElementById('blogEditorTitle').textContent = '새 글';
       document.getElementById('deleteBlogBtn').style.display = 'none';
 
       document.getElementById('postDate').value         = '';
@@ -1273,7 +1273,7 @@
       document.getElementById('editorEmpty').style.display = 'none';
       document.getElementById('pubEditor').style.display   = 'none';
       document.getElementById('blogEditor').style.display  = 'block';
-      document.getElementById('blogEditorTitle').textContent = 'Edit Post';
+      document.getElementById('blogEditorTitle').textContent = '글 편집';
       document.getElementById('deleteBlogBtn').style.display = 'inline-flex';
 
       document.getElementById('postDate').value         = post.date || '';
@@ -1299,7 +1299,7 @@
       const imageCap   = document.getElementById('postImageCaption').value.trim();
       const videoUrl   = document.getElementById('postVideoUrl').value.trim();
 
-      if (!date) { alert('Please enter a date.'); return; }
+      if (!date) { alert('날짜를 입력해 주세요.'); return; }
 
       const posts = loadPosts();
 
@@ -1314,13 +1314,13 @@
       isDirty = false;
       savePosts(posts);
       renderSidebar();
-      showToast('Post saved.');
+      showToast('글이 저장되었습니다.');
       document.getElementById('deleteBlogBtn').style.display = 'inline-flex';
-      document.getElementById('blogEditorTitle').textContent = 'Edit Post';
+      document.getElementById('blogEditorTitle').textContent = '글 편집';
     }
 
     function confirmDeletePost() {
-      openConfirm('Delete Post?', 'This will permanently delete the post.', deleteCurrentPost);
+      openConfirm('글을 삭제할까요?', '이 작업은 되돌릴 수 없습니다.', deleteCurrentPost);
     }
 
     function deleteCurrentPost() {
@@ -1331,7 +1331,7 @@
     function quickDeletePost(id) {
       const posts = loadPosts().filter(p => p.id !== id);
       savePosts(posts);
-      showToast('Post deleted.');
+      showToast('글이 삭제되었습니다.');
       showEmpty();
     }
 
@@ -1344,7 +1344,7 @@
       document.getElementById('editorEmpty').style.display = 'none';
       document.getElementById('blogEditor').style.display  = 'none';
       document.getElementById('pubEditor').style.display   = 'block';
-      document.getElementById('pubEditorTitle').textContent = 'New Publication';
+      document.getElementById('pubEditorTitle').textContent = '새 논문';
       document.getElementById('deletePubBtn').style.display = 'none';
 
       document.getElementById('pubYear').value     = new Date().getFullYear();
@@ -1368,7 +1368,7 @@
       document.getElementById('editorEmpty').style.display = 'none';
       document.getElementById('blogEditor').style.display  = 'none';
       document.getElementById('pubEditor').style.display   = 'block';
-      document.getElementById('pubEditorTitle').textContent = 'Edit Publication';
+      document.getElementById('pubEditorTitle').textContent = '논문 편집';
       document.getElementById('deletePubBtn').style.display = 'inline-flex';
 
       document.getElementById('pubYear').value     = pub.year || '';
@@ -1385,8 +1385,8 @@
       const viewLink  = document.getElementById('pubViewLink').value.trim();
       const pdfLink   = document.getElementById('pubPdfLink').value.trim();
 
-      if (!title) { alert('Please enter a title.'); return; }
-      if (!year)  { alert('Please enter a year.');  return; }
+      if (!title) { alert('제목을 입력해 주세요.'); return; }
+      if (!year)  { alert('연도를 입력해 주세요.'); return; }
 
       const pubs = loadPublications();
 
@@ -1403,13 +1403,13 @@
       isDirty = false;
       savePublications(pubs);
       renderSidebar();
-      showToast('Publication saved.');
+      showToast('논문이 저장되었습니다.');
       document.getElementById('deletePubBtn').style.display = 'inline-flex';
-      document.getElementById('pubEditorTitle').textContent = 'Edit Publication';
+      document.getElementById('pubEditorTitle').textContent = '논문 편집';
     }
 
     function confirmDeletePub() {
-      openConfirm('Delete Publication?', 'This will permanently delete the publication.', deleteCurrentPub);
+      openConfirm('논문을 삭제할까요?', '이 작업은 되돌릴 수 없습니다.', deleteCurrentPub);
     }
 
     function deleteCurrentPub() {
@@ -1420,7 +1420,7 @@
     function quickDeletePub(id) {
       const pubs = loadPublications().filter(p => p.id !== id);
       savePublications(pubs);
-      showToast('Publication deleted.');
+      showToast('논문이 삭제되었습니다.');
       showEmpty();
     }
 
