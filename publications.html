@@ -463,9 +463,15 @@
     // ── DYNAMIC CONTENT FROM ADMIN ──
     (function() {
       const stored = localStorage.getItem('kim_publications');
-      if (!stored) return;
+      if (!stored) return; // admin never initialised — static HTML is the fallback
+
+      const list = document.querySelector('.pub-list');
       const pubs = JSON.parse(stored);
-      if (!pubs || !pubs.length) return;
+
+      if (!pubs || !pubs.length) {
+        list.innerHTML = '<p style="padding:5rem 0;text-align:center;color:var(--muted);font-size:0.88rem;letter-spacing:0.1em;">아직 등록된 논문이 없습니다.</p>';
+        return;
+      }
 
       function esc(s) {
         return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -494,7 +500,7 @@
         return `<div class="year-group"><p class="year-label">${esc(year)}</p><div class="year-papers">${items}</div></div>`;
       }).join('');
 
-      document.querySelector('.pub-list').innerHTML = html;
+      list.innerHTML = html;
     })();
 
     const t = {

@@ -663,9 +663,15 @@
     // ── DYNAMIC CONTENT FROM ADMIN ──
     (function() {
       const stored = localStorage.getItem('kim_blog_posts');
-      if (!stored) return;
+      if (!stored) return; // admin never initialised — static HTML is the fallback
+
+      const feed = document.querySelector('.feed');
       const posts = JSON.parse(stored);
-      if (!posts || !posts.length) return;
+
+      if (!posts || !posts.length) {
+        feed.innerHTML = '<p style="padding:5rem 0;text-align:center;color:var(--muted);font-size:0.88rem;letter-spacing:0.1em;">아직 게시된 글이 없습니다.</p>';
+        return;
+      }
 
       function esc(s) {
         return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -676,7 +682,6 @@
         return m ? 'https://www.youtube.com/embed/' + m[1] : url;
       }
 
-      const feed = document.querySelector('.feed');
       feed.innerHTML = posts.map(p => {
         let media = '';
         if (p.videoUrl) {
