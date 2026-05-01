@@ -141,7 +141,7 @@
     .lang-option.active { color: var(--gold); }
 
     /* ── DASHBOARD ── */
-    #dashboard { display: none; min-height: 100vh; padding-top: 4.5rem; }
+    #dashboard { display: none; min-height: 100vh; }
 
     .admin-header {
       position: fixed;
@@ -295,7 +295,7 @@
     .admin-layout {
       display: grid;
       grid-template-columns: 280px 1fr;
-      min-height: calc(100vh - 65px);
+      min-height: 100vh;
     }
 
     /* ── SIDEBAR ── */
@@ -304,6 +304,7 @@
       background: #FFFFFF;
       display: flex;
       flex-direction: column;
+      padding-top: 4.5rem;
     }
 
     .sidebar-tabs {
@@ -408,6 +409,7 @@
     /* ── EDITOR PANEL ── */
     .editor-panel {
       padding: 2.5rem 3rem;
+      padding-top: calc(4.5rem + 2.5rem);
       overflow-y: auto;
     }
 
